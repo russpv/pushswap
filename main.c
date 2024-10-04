@@ -21,6 +21,7 @@ static void	_init_stacks(t_state **state, char **argv, int argc)
 	(*state)->argv = argv;
 	(*state)->nums = (size_t)argc - 1;
 	(*state)->print_move = 1;
+	(*state)->curr_split = 0;
 }
 
 /* Check args are all numeric */
@@ -64,8 +65,10 @@ int main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	_init_stacks(&state, argv, argc);
-	_solve(state);
 	print_stacks(state);
+	//print_arr(state->a, state->a_size);
+	_solve(state);
+	//print_stacks(state);
 	free_struct(state);
 	return (EXIT_SUCCESS);
 }

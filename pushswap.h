@@ -23,17 +23,21 @@ typedef struct s_stack
 */
 typedef struct s_state
 {
-	long		*a;
+	long		*a; /* stacks */
 	size_t	*a_idx;
 	size_t	a_size;
 	long		*b;
 	size_t	*b_idx;
 	size_t	b_size;
 
-	char	**argv;
+	char	**argv; /* args */
 	size_t	nums;
 
-	int		print_move;
+	long		pivot;
+	int		splits;	/* algo */
+	int		curr_split;
+	int		curr_stack;
+	int		print_move; /* output */
 }	t_state;
 
 // free_struct.c
@@ -52,7 +56,9 @@ int		sorted(t_state *);
 void		err(char *, t_state *);
 
 // utils.c
+int		get_median(long *, size_t *, size_t);
 void	print_stacks(t_state *);
+void	print_stack(long *, size_t *, size_t);
 
 // rev_rotates.c rotates.c pushes.c
 void	rev_rot_a(t_state *);

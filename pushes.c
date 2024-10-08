@@ -10,6 +10,7 @@ void	push_b(t_state *s)
 	if (0 == s->a_size)
 		return ;
 	// pop from stack a
+	// TODO include parts array
 	num = s->a[s->a_idx[0]];
 	s->a[s->a_idx[0]] = LONG_MAX;
 	ft_memmove(&s->a_idx[0], &s->a_idx[1], (s->a_size - 1) * sizeof(size_t));

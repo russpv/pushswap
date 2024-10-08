@@ -2,41 +2,32 @@
 # define PUSH_SWAP_H
 
 # include "libft/libft.h"
+# include "stack.h"
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include <limits.h>
 
-/*
-typedef struct s_stack
+# define STACKS 2
+
+enum e_stacks
 {
-	int		*nums; // actual integers, not modified
-	int		*idx;  // order index of nums, ops modify this
-	//size_t	head; // not necessary, index 0
-	size_t	size;
-	size_t	last_idx; // for readability
-	int		max; // quantity
-	int		min;
-	int		median_idx;
-}	t_stack;
-*/
+	STACK_A,
+	STACK_B
+};
+
 typedef struct s_state
 {
-	long		*a; /* stacks */
-	size_t	*a_idx;
-	size_t	a_size;
-	long		*b;
-	size_t	*b_idx;
-	size_t	b_size;
+	t_stack_ptr	stacks[STACKS];
+	t_stack_ptr	curr_stack;
 
 	char	**argv; /* args */
 	size_t	nums;
 
 	long		pivot;
-	int		splits;	/* algo */
-	int		curr_split;
-	int		curr_stack;
+	int		passes;	/* algo */
+	int		curr_pass;
 	int		print_move; /* output */
 }	t_state;
 

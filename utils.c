@@ -24,13 +24,13 @@ void	print_stack(long *arr, size_t *idx, size_t size)
 		fprintf(stderr, " %ld", arr[idx[j]]);
 	fprintf(stderr,"|");
 }
-static void	_print_arr(long *arr, size_t size)
+/*static void	_print_arr(long *arr, size_t size)
 {
 	for (size_t j = 0; j < size - 1; j++)
 	{
 		fprintf(stderr, " %ld", arr[j]);
 	}
-}
+}*/
 
 /* Simple bubble sort */
 int		get_median(long *nums, size_t *idx, size_t size)
@@ -65,12 +65,13 @@ int		get_median(long *nums, size_t *idx, size_t size)
 		if (flag == 0)
 		   break ;	
 	}
-	_print_arr(arr, size);
+	//_print_arr(arr, size);
 	if (size % 2) //odd
 	{
-		fprintf(stderr, "median:%ld", arr[size / 2]);
+		fflush(stderr);
+		fprintf(stderr, "median:%ld|", arr[size / 2]);
 		return (arr[size / 2]);
 	}
-	fprintf(stderr, "median:%ld", arr[size / 2 -1 ]);
+	fprintf(stderr, "median:%ld|", arr[size / 2 -1 ]);
 	return (arr[size / 2 - 1]);
 }

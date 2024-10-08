@@ -69,7 +69,7 @@ void	solve(t_state *s)
 			fprintf(stderr, "%ld below %ld|", s->a[s->a_idx[0]], s->pivot);
 			if (s->curr_pass % 2) { //to Stack B
 				fprintf(stderr,"push+rot|");
-				push_stack(s->dest_stack, pop_stack(s->curr_stack));
+				push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[0]);
 				rotate_stack(s->dest_stack); /* TODO: wasted move if all same grouping on stack */
 			}
 			else { //Back to A
@@ -81,7 +81,7 @@ void	solve(t_state *s)
 			if (s->curr_pass % 2) //to Stack B
 			{
 				fprintf(stderr, "push|");
-				push_stack(s->dest_stack, pop_stack(s->curr_stack));
+				push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[1]);
 				rot_counter++;
 			}
 			else {
@@ -92,7 +92,7 @@ void	solve(t_state *s)
 	}
 	while (rot_counter--) {//TODO init rot_counter
 		fprintf(stderr, "rotctr--|");
-		rot_b(s); /* move bottoms */
+		rotate_stack(s->dest_stack); /* move bottoms */
 	}
 	s->curr_stack = _flip_stack(s->curr_stack); /* finished with all stack partitions, next split */
 	solve(s);

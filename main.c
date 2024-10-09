@@ -10,19 +10,21 @@
 // compute the closest number in stack b, push to a
 // rotate stack a
 
-/* Pointer to avoid copying stacks many times */
+/*  */
 static void	_init_stacks(t_state **state, char **argv, int argc)
 {
 	*state = malloc(sizeof(t_state));
-	if (!state)
-		exit(EXIT_FAILURE);
-	(*state)->a = NULL;
-	(*state)->b = NULL;
+	if (!*state)
+		err("malloc error", *state);
 	(*state)->argv = argv;
 	(*state)->nums = (size_t)argc - 1;
 	(*state)->print_move = 1;
 	(*state)->curr_pass = 0;
-	(*state)->curr_stack = 'a';
+	(*state)->curr_stack = NULL;
+	(*state)->stacks[STACK_A] = create_stack(STACK_A, (*state)->nums);
+	(*state)->stacks[STACK_B] = create_stack(STACK_B, (*state)->nums);
+	if (!(*state)->stacks[STACK_A] || !(*state)->stacks[STACK_B])
+		err("malloc error", *state);
 }
 
 /* Check args are all numeric */

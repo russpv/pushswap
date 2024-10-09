@@ -51,6 +51,10 @@ int	get_top_partition_median(t_stack_ptr stack)
 	return (get_median(stack->nums, stack->idx, partition->size));
 }
 
+size_t	get_partition_size(t_partition_ptr partition)
+{
+	return (partition->size);
+}
 /* Returns ptr to topmost partition on stack */
 struct s_partition	*get_top_partition(t_stack_ptr stack)
 {
@@ -61,6 +65,8 @@ struct s_partition	*get_top_partition(t_stack_ptr stack)
 	while (i < MAX_PARTITIONS)
 		if (part_id != stack->partitions[i]->id)
 			i++;
+	if (i >= MAX_PARTITIONS)
+		return (NULL);
 	return (stack->partitions[i]);
 }
 
@@ -68,10 +74,10 @@ static int	_get_next_free_partition_id(t_stack_ptr stack)
 {
 	int i;
 
-	i = 0;
-	while (i < MAX_PARTITIONS)
-		if (stack->partitions[i] != NULL)
-			i++;
+	i = -1
+	while (++i < MAX_PARTITIONS)
+		if (stack->partitions[i] == NULL)
+			break ;
 	if (0 == i)
 		i = -1;
 	return (i);

@@ -21,6 +21,7 @@ typedef struct s_state
 {
 	t_stack_ptr	stacks[STACKS];
 	t_stack_ptr	curr_stack;
+	t_stack_ptr	dest_stack;
 
 	char	**argv; /* args */
 	size_t	nums;
@@ -31,14 +32,14 @@ typedef struct s_state
 	int		print_move; /* output */
 }	t_state;
 
-// free_struct.c
-void	free_struct(t_state *);
-
 // solver.c
 void	solver(t_state *);
 
-// init_stack_a.c
+// state.c
 void	init_stack_a(t_state *);
+void	create_destination_partitions(t_state *, t_partition_ptr (*)[2]);
+// free_struct.c
+void	free_struct(t_state *); //TODO rename
 
 // sorted.c
 int		sorted(t_state *);
@@ -47,9 +48,7 @@ int		sorted(t_state *);
 void		err(char *, t_state *);
 
 // utils.c
-int		get_median(long *, size_t *, size_t);
 void	print_stacks(t_state *);
-void	print_stack(long *, size_t *, size_t);
 
 // rev_rotates.c rotates.c pushes.c
 void	rev_rot_a(t_state *);

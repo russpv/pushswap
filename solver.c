@@ -27,11 +27,16 @@
 // Second pass do a: 33 | 44 || 1111, 22 | 33 | 44 | 11 >> 11 | 22 | 33 | 44; rightside
 // Third pass do b: 8 | 7 || 33 | 22 | 11 >> 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1; inverted
 // Fourth pass do a:  rightside
-//
-//
-static void	_flip_stack(char stack)
+
+
+# define TOP 0
+# define SMALL_NUMS 200
+# define LARGE_NUMS 600
+
+
+static int	_flip_stack(t_stack_ptr stack)
 {
-	if (STACK_A == stack)
+	if (stack_compare(STACK_A, stack) != 0)
 		return (STACK_B);
 
 	else
@@ -44,9 +49,8 @@ void	solve(t_state *s)
 {
 	int rot_counter = 0;
 	size_t i = 0;
-	int pivot;
-	struct s_partition *top_partition;
-	struct s_partition **dest_partitions[2];
+	t_partition_ptr	top_partition;
+	t_partition_ptr (*dest_partitions)[2];
 
 	++s->curr_pass;
 	if (s->curr_pass == s->passes)
@@ -58,18 +62,17 @@ void	solve(t_state *s)
 	// 1b. Create two partitions on the destination stack
 	// 1c. Iterate and push to destination stack
 	top_partition = get_top_partition(s->curr_stack);
-	pivot = get_top_partition_median(s->curr_stack);
+	s->pivot = get_top_partition_median(s->curr_stack);
 	create_destination_partitions(s, dest_partitions);
-	while (i < top_partition->size)
+	while (i < get_partition_size(top_partition))
 	{
-		fprintf(stderr, "curr:%ld|", s->a[s->a_idx[0]]);
-		print_stack(s->a, s->a_idx, s->a_size); 
-		if (peek_top(s->curr_stack) <= pivot) // TODO function ptr refactor
+		print_stack(s->curr_stack); 
+		if (peek_stack(s->curr_stack) <= s->pivot) // TODO function ptr refactor
 		{
-			fprintf(stderr, "%ld below %ld|", s->a[s->a_idx[0]], s->pivot);
+			fprintf(stderr, "%ld below %ld|", peek_stack(s->curr_stack), s->pivot);
 			if (s->curr_pass % 2) { //to Stack B
 				fprintf(stderr,"push+rot|");
-				push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[0]);
+				push_stack(s->dest_stack, pop_stack(s->curr_stack), (*dest_partitions)[0]);
 				rotate_stack(s->dest_stack); /* TODO: wasted move if all same grouping on stack */
 			}
 			else { //Back to A
@@ -81,7 +84,7 @@ void	solve(t_state *s)
 			if (s->curr_pass % 2) //to Stack B
 			{
 				fprintf(stderr, "push|");
-				push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[1]);
+				push_stack(s->dest_stack, pop_stack(s->curr_stack), (*dest_partitions)[1]);
 				rot_counter++;
 			}
 			else {
@@ -100,11 +103,15 @@ void	solve(t_state *s)
 
 void	solver(t_state *s)
 {
-//TODO get a measure of unsortedness, normalized inversion pairs.
-	if (s->nums < 200)
-		s->passes = 2; //TODO set this to '2'
-	else if (s->nums < 600)
+	const t_stack_ptr a = s->stacks[0];
+	const int	bottom = s->max_size - 1;
+
+	if (s->nums < SMALL_NUMS)
+		s->passes = 2;
+	else if (s->nums < LARGE_NUMS)
 		s->passes = 4;
+	create_partition(a);
+	fill_partition(a, a->partitions[0], TOP, bottom);
 	solve(s);
 	return ;
 }

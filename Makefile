@@ -3,7 +3,8 @@ OUTPUT = executable
 
 SOURCES = main.c free_struct.c init_stack_a.c solver.c \
 		  utils.c sorted.c err.c rotates.c swaps.c \
-		  rev_rotates.c pushes.c 
+		  rev_rotates.c pushes.c \
+		  stack.c partition.c state.c 
           
 BONUS_SOURCES = $(SOURCES)
 BONUS_OBJECTS = $(BONUS_SOURCES:.c=.o)

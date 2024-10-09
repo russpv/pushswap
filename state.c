@@ -1,6 +1,6 @@
 #include "pushswap.h"
 
-void	create_destination_partitions(t_state *s, struct s_partition **d)
+void	create_destination_partitions(t_state *s, struct s_partition (*)d[2])
 {
 	t_stack_ptr dest_stack;
 

@@ -71,7 +71,7 @@ long	peek_top(t_stack_ptr stack)
 	return (stack->nums[stack->idx[0]]);
 }
 
-void	pop_stack(t_stack_ptr stack)
+long	pop_stack(t_stack_ptr stack)
 {
 	const long value = stack->nums[stack->idx[0]];
 	stack->nums[stack->idx[0]] = LONG_MAX;
@@ -79,9 +79,10 @@ void	pop_stack(t_stack_ptr stack)
 	stack->idx
 	// overwrite
 	stack->part_idx
+	return (num);
 }
 
-void	push_stack(t_stack_ptr stack, int num, struct s_partition *partition)
+void	push_stack(t_stack_ptr stack, int num, t_partition_ptr partition)
 {
 	const int idx = get_next_free_idx(stack->nums);
 	stack->nums[idx] = num;
@@ -129,4 +130,14 @@ void	rotate_both(t_state *s)
 void	rev_rotate_both(t_state *s)
 {
 	(void)s;
+}
+
+void	print_stack(t_stack_ptr stack)
+{
+	const size_t size = stack->size;
+	if (0 == size)
+		return ;
+	for (size_t j = 0; j < size - 1; j++)
+		fprintf(stderr, " %ld", stack->nums[stack->idx[j]]);
+	fprintf(stderr,"|");
 }

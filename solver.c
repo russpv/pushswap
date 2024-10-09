@@ -34,15 +34,6 @@
 # define LARGE_NUMS 600
 
 
-static int	_flip_stack(t_stack_ptr stack)
-{
-	if (stack_compare(STACK_A, stack) != 0)
-		return (STACK_B);
-
-	else
-		return (STACK_A);
-}
-
 // at this point, two stacks have been created ...
 // conditionally create a starting partition ...
 void	solve(t_state *s)
@@ -50,7 +41,7 @@ void	solve(t_state *s)
 	int rot_counter = 0;
 	size_t i = 0;
 	t_partition_ptr	top_partition;
-	t_partition_ptr (*dest_partitions)[2];
+	t_partition_ptr dest_partitions[2];
 
 	++s->curr_pass;
 	if (s->curr_pass == s->passes)
@@ -63,7 +54,7 @@ void	solve(t_state *s)
 	// 1c. Iterate and push to destination stack
 	top_partition = get_top_partition(s->curr_stack);
 	s->pivot = get_top_partition_median(s->curr_stack);
-	create_destination_partitions(s, dest_partitions);
+	create_destination_partitions(s, &dest_partitions);
 	while (i < get_partition_size(top_partition))
 	{
 		print_stack(s->curr_stack); 
@@ -72,7 +63,7 @@ void	solve(t_state *s)
 			fprintf(stderr, "%ld below %ld|", peek_stack(s->curr_stack), s->pivot);
 			if (s->curr_pass % 2) { //to Stack B
 				fprintf(stderr,"push+rot|");
-				push_stack(s->dest_stack, pop_stack(s->curr_stack), (*dest_partitions)[0]);
+				push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[0]);
 				rotate_stack(s->dest_stack); /* TODO: wasted move if all same grouping on stack */
 			}
 			else { //Back to A
@@ -84,7 +75,7 @@ void	solve(t_state *s)
 			if (s->curr_pass % 2) //to Stack B
 			{
 				fprintf(stderr, "push|");
-				push_stack(s->dest_stack, pop_stack(s->curr_stack), (*dest_partitions)[1]);
+				push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[1]);
 				rot_counter++;
 			}
 			else {
@@ -97,21 +88,22 @@ void	solve(t_state *s)
 		fprintf(stderr, "rotctr--|");
 		rotate_stack(s->dest_stack); /* move bottoms */
 	}
-	s->curr_stack = _flip_stack(s->curr_stack); /* finished with all stack partitions, next split */
+	flip_curr_stack(s); /* finished with all stack partitions, next split */
 	solve(s);
 }
 
 void	solver(t_state *s)
 {
-	const t_stack_ptr a = s->stacks[0];
-	const int	bottom = s->max_size - 1;
+	const           t_stack_ptr a = s->stacks[0];
+	const int	    bottom_idx = s->nums - 1;;
+    t_partition_ptr p;
 
 	if (s->nums < SMALL_NUMS)
 		s->passes = 2;
 	else if (s->nums < LARGE_NUMS)
 		s->passes = 4;
-	create_partition(a);
-	fill_partition(a, a->partitions[0], TOP, bottom);
+	p = create_partition(a);
+	fill_partition(a, p, TOP, bottom_idx);
 	solve(s);
 	return ;
 }

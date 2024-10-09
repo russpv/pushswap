@@ -17,13 +17,15 @@ enum e_stacks
 	STACK_B
 };
 
+/* State data type */
+
 typedef struct s_state
 {
 	t_stack_ptr	stacks[STACKS];
 	t_stack_ptr	curr_stack;
 	t_stack_ptr	dest_stack;
 
-	char	**argv; /* args */
+    char	**argv; /* args */
 	size_t	nums;
 
 	long		pivot;
@@ -32,14 +34,16 @@ typedef struct s_state
 	int		print_move; /* output */
 }	t_state;
 
-// solver.c
-void	solver(t_state *);
-
 // state.c
+void    create_state(t_state **, char **, int);
+void    destroy_state(t_state *);
 void	init_stack_a(t_state *);
 void	create_destination_partitions(t_state *, t_partition_ptr (*)[2]);
-// free_struct.c
-void	free_struct(t_state *); //TODO rename
+void    flip_curr_stack(t_state *);
+
+/* Program functions */
+// solver.c
+void	solver(t_state *);
 
 // sorted.c
 int		sorted(t_state *);

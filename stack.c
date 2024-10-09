@@ -19,7 +19,7 @@ struct	s_partition
 	const int	id;
 	size_t		size; // increment on add
 	t_stack_ptr	stack;
-}
+};
 
 t_stack_ptr	create_stack(const char id, const size_t size)
 {
@@ -130,6 +130,24 @@ void	rotate_both(t_state *s)
 void	rev_rotate_both(t_state *s)
 {
 	(void)s;
+}
+
+int is_sorted_asc(t_stack_ptr *s)
+{
+	size_t i;
+	const size_t *idx = s->idx;
+    const long    *nums = s->nums; 
+
+	i = 1;
+	if (s->size < (size_t)2)
+		return (SUCCESS);
+	while (i < s->size)
+	{
+		if (nums[idx[i - 1]] > nums[idx[i]])
+			return (FAILURE);
+		i++;
+	}
+	return (SUCCESS);
 }
 
 void	print_stack(t_stack_ptr stack)

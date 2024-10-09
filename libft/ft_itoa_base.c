@@ -24,10 +24,8 @@
 */
 static inline char	*load_str(char *s, unsigned long long n, unsigned int base)
 {
-	int			sign;
 	const char	*radix = "0123456789abcdefghijk";
 
-	sign = 0;
 	if (n == 0)
 		*s-- = '0';
 	while (n > 0)

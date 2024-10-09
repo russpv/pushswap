@@ -1,6 +1,8 @@
 #ifndef STACK_H
 # define STACK_H
 
+# include <stddef.h>
+
 /* Stack ADT */
 typedef struct s_stack *t_stack_ptr;
 typedef struct s_partition *t_partition_ptr;
@@ -14,6 +16,7 @@ void		rotate_stack(t_stack_ptr);
 void		rev_rotate_stack(t_stack_ptr);
 void		print_stack(t_stack_ptr);
 int			stack_compare(int, t_stack_ptr);
+int         is_sorted_asc(t_stack_ptr);
 
 /* Partition methods */
 

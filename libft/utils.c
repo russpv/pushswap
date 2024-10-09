@@ -47,7 +47,7 @@ int	return_false_and_resetpos(const char **s, t_spec *specs, \
 {
 	*s = specs->startpos;
 	specs->initflg = FALSE;
-	bytes += putchar_with_return('%');
+	*bytes += putchar_with_return('%');
 	return (FALSE);
 }
 

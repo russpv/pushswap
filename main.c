@@ -10,23 +10,6 @@
 // compute the closest number in stack b, push to a
 // rotate stack a
 
-/*  */
-static void	_init_stacks(t_state **state, char **argv, int argc)
-{
-	*state = malloc(sizeof(t_state));
-	if (!*state)
-		err("malloc error", *state);
-	(*state)->argv = argv;
-	(*state)->nums = (size_t)argc - 1;
-	(*state)->print_move = 1;
-	(*state)->curr_pass = 0;
-	(*state)->curr_stack = NULL;
-	(*state)->stacks[STACK_A] = create_stack(STACK_A, (*state)->nums);
-	(*state)->stacks[STACK_B] = create_stack(STACK_B, (*state)->nums);
-	if (!(*state)->stacks[STACK_A] || !(*state)->stacks[STACK_B])
-		err("malloc error", *state);
-}
-
 /* Check args are all numeric */
 static int	_parse_args(int argc, char **argv)
 {
@@ -67,11 +50,11 @@ int main(int argc, char **argv)
 		ft_printf("Bad Input");
 		return (EXIT_FAILURE);
 	}
-	_init_stacks(&state, argv, argc);
+	create_state(&state, argv, argc);
 	//print_stacks(state);
 	//print_arr(state->a, state->a_size);
 	_solve(state);
 	//print_stacks(state);
-	free_struct(state);
+	destroy_state(state);
 	return (EXIT_SUCCESS);
 }

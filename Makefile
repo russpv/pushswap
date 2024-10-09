@@ -1,9 +1,8 @@
 NAME = push_swap
 OUTPUT = executable
 
-SOURCES = main.c free_struct.c init_stack_a.c solver.c \
-		  utils.c sorted.c err.c rotates.c swaps.c \
-		  rev_rotates.c pushes.c \
+SOURCES = main.c solver.c \
+		  err.c \
 		  stack.c partition.c state.c 
           
 BONUS_SOURCES = $(SOURCES)

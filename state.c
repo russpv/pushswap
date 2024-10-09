@@ -32,8 +32,8 @@ void	create_destination_partitions(t_state *s, t_partition_ptr (*d)[2])
 		dest_stack = s->stacks[1];
 	else
 		dest_stack = s->stacks[0];
-	d[0] = create_partition(dest_stack);
-	d[1] = create_partition(dest_stack);
+	(*d)[0] = create_partition(dest_stack);
+	(*d)[1] = create_partition(dest_stack);
 }
 
 void	flip_curr_stack(t_state *s)
@@ -51,4 +51,16 @@ void	print_stacks(t_state *s)
     print_stack(s->stacks[STACK_A]);
 	fprintf(stderr,"\nb:");
     print_stack(s->stacks[STACK_B]);
+}
+
+void	rotate_both(t_state *s)
+{
+	rotate_stack(s->stacks[0]);
+    rotate_stack(s->stacks[1]);
+}
+
+void	rev_rotate_both(t_state *s)
+{
+	rev_rotate_stack(s->stacks[0]);
+    rev_rotate_stack(s->stacks[1]);
 }

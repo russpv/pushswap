@@ -1,7 +1,27 @@
-#include "partition.h"
+#include "stack.h"
+#include "stack.c"
+
+bool    increment_partition(t_stack_ptr s, int idx)
+{
+    if (NULL == s->partitions[idx])
+        return (false);
+    s->partitions[idx]->size++;
+    return (true);
+}
+
+bool    decrement_partition(t_stack_ptr s, int idx)
+{
+    if (NULL == s->partitions[idx])
+        return (false);
+    if (1 == s->partitions[idx]->size)
+        destroy_partition(s->partitions[idx]);
+    else
+        s->partitions[idx]->size--;
+    return (true);
+}
 
 /* Returns median of numbers on top of stack */
-int		get_median(long *nums, size_t *idx, size_t size)
+int		get_median(long *nums, int *idx, size_t size)
 {
 	int flag;
 	long tmp;
@@ -46,7 +66,7 @@ int		get_median(long *nums, size_t *idx, size_t size)
 
 int	get_top_partition_median(t_stack_ptr stack)
 {
-	const struct s_partition *partition = get_top_partition(stack);
+	const t_partition_ptr	partition = get_top_partition(stack);
 
 	return (get_median(stack->nums, stack->idx, partition->size));
 }
@@ -56,7 +76,7 @@ size_t	get_partition_size(t_partition_ptr partition)
 	return (partition->size);
 }
 /* Returns ptr to topmost partition on stack */
-struct s_partition	*get_top_partition(t_stack_ptr stack)
+t_partition_ptr get_top_partition(t_stack_ptr stack)
 {
 	const int part_id = stack->part_idx[0];
 	int i;
@@ -74,7 +94,7 @@ static int	_get_next_free_partition_id(t_stack_ptr stack)
 {
 	int i;
 
-	i = -1
+	i = -1;
 	while (++i < MAX_PARTITIONS)
 		if (stack->partitions[i] == NULL)
 			break ;
@@ -84,9 +104,9 @@ static int	_get_next_free_partition_id(t_stack_ptr stack)
 }
 
 /* Creates new empty partition on stack */
-struct s_partition *create_partition(t_stack_ptr stack)
+t_partition_ptr	create_partition(t_stack_ptr stack)
 {
-	struct s_partition *partition = malloc(sizeof(s_partition));
+	t_partition_ptr	partition = malloc(sizeof(struct s_partition));
 	if (partition)
 	{
 		partition->id = _get_next_free_partition_id(stack);
@@ -100,10 +120,14 @@ struct s_partition *create_partition(t_stack_ptr stack)
 	return (partition);
 }
 
-/* Fills empty partition with stack contents between 
- * indices begin and end inclusive */
-void	fill_partition(t_stack_ptr stack, 
-						struct s_partition *partition, 
+void    destroy_partition(t_partition_ptr p)
+{
+    free(p);
+}
+
+/* DEPRECATED
+ * void	fill_partition(t_stack_ptr stack, 
+						t_partition_ptr	partition, 
 						int begin, 
 						int end)
 {
@@ -115,5 +139,5 @@ void	fill_partition(t_stack_ptr stack,
 		partition[i] = stack[i];
 		partition->size++;
 	}
-}
+}*/
 

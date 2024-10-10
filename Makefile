@@ -82,6 +82,6 @@ re: fclean all
 so:
 
 	$(CC) -fPIC $(CFLAGS) -c $(SOURCES) $(BONUS_SOURCES)
-	$(CC) -nostartfiles -shared -o pipex.so $(OBJECTS) $(BONUS_OBJECTS)
+	$(CC) -nostartfiles -shared -o $(NAME).so $(OBJECTS) $(BONUS_OBJECTS)
 
 .PHONY: all bonus clean fclean re so

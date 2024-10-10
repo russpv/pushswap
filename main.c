@@ -29,8 +29,10 @@ static int	_parse_args(int argc, char **argv)
 
 static void	_solve(t_state *state)
 {
-	init_stack_a(state);
-	if (sorted(state) == FAILURE)
+	fill_stack_a(state);
+	print_stacks(state);
+	fprintf(stderr, "stack a filled\n");
+	if (is_done(state) == false)
 		solver(state);
 	return ;
 }
@@ -51,7 +53,6 @@ int main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	create_state(&state, argv, argc);
-	//print_stacks(state);
 	//print_arr(state->a, state->a_size);
 	_solve(state);
 	//print_stacks(state);

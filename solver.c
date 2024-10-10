@@ -53,12 +53,16 @@ void	solve(t_state *s)
 	// 1b. Create two partitions on the destination stack
 	// 1c. Iterate and push to destination stack
 	top_partition = get_top_partition(s->curr_stack);
+	fprintf(stderr, "top partition getted: %p \n", top_partition);
+	if (!top_partition)
+		err("partition get error", s);
 	s->pivot = get_top_partition_median(s->curr_stack);
 	create_destination_partitions(s, &dest_partitions);
+	fprintf(stderr, "partitions created\n");
 	while (i < get_partition_size(top_partition))
 	{
-		print_stack(s->curr_stack); 
-		if (peek_stack(s->curr_stack) <= s->pivot) // TODO function ptr refactor
+		print_stacks(s); 
+		if (peek_stack(s->curr_stack) <= s->pivot)
 		{
 			fprintf(stderr, "%ld below %ld|", peek_stack(s->curr_stack), s->pivot);
 			if (s->curr_pass % 2) { //to Stack B
@@ -81,13 +85,14 @@ void	solve(t_state *s)
 			else {
 			}
 		}
-		fprintf(stderr, "##(end round)##"); fflush(stderr);
+		fprintf(stderr, "##(end round)##\n"); fflush(stderr);
 		i++;
 	}
 	while (rot_counter--) {//TODO init rot_counter
 		fprintf(stderr, "rotctr--|");
 		rotate_stack(s->dest_stack); /* move bottoms */
 	}
+	print_stacks(s);
 	flip_curr_stack(s); /* finished with all stack partitions, next split */
 	solve(s);
 }

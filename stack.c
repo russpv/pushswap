@@ -1,27 +1,15 @@
-#include "stack.h"
+#include "stack_int.h"
 
-#define MAX_PARTITIONS 16
-#define INIT_IDX_VALUE -1
-#define INIT_NUM_VALUE LONG_MAX
-
-struct	s_stack
+// TODO delete
+void	print_stack(t_stack_ptr stack)
 {
-	char	    		id;
-	size_t				max_size;
-	size_t				size;
-	
-	long				*nums; // actual integers, not modified
-	int					*idx;  // order index of nums, ops modify this
-	int					*part_idx;  // partition id, 1:1 with nums
-	t_partition_ptr 	partitions[MAX_PARTITIONS];
-};
-
-struct	s_partition
-{
-	int	id;
-	size_t		size; // increment on add
-	t_stack_ptr	stack;
-};
+	const size_t size = stack->size;
+	if (0 == size)
+		return ;
+	for (size_t j = 0; j < size; j++)
+		fprintf(stderr, " %ld", stack->nums[stack->idx[j]]);
+	fprintf(stderr,"|");
+}
 
 t_stack_ptr	create_stack(const char id, const size_t size)
 {
@@ -68,53 +56,56 @@ void	destroy_stack(t_stack_ptr stack)
 }
 
 /* Populates nums and idx only */
-void	fill_stack(t_stack_ptr stack, char **argv)
+bool	fill_stack(t_stack_ptr stack, char **argv)
 {
     size_t i;
 
     i = 0;
     if (NULL == stack)
-        return ;
-	while (argv[i] != NULL)
+		return (false);
+	while (argv[i + 1] != NULL)
     {
-        stack->nums[i] = (long)ft_atoi(argv[i]);
+        stack->nums[i] = (long)ft_atoi(argv[i + 1]);
         stack->idx[i] = i;
         stack->size++;
-        i++;;
+        i++;
     }
+	return (true);
 }
 
 /* Returns top value */
-long	peek_top(t_stack_ptr stack)
+long	peek_stack(t_stack_ptr stack)
 {
 	return (stack->nums[stack->idx[0]]);
 }
 
-/* Removes top value from num array, idx array, and partition */
+/* Removes top value from num array, idx array, and partition 
+ * Decrements partition and size */
 long	pop_stack(t_stack_ptr stack)
 {
+    if (NULL == stack || 0 == stack->size)
+		return (LONG_MAX);
 	const long  top_value = stack->nums[stack->idx[0]];
     const int   top_part_idx = stack->part_idx[0];
-
-    stack->nums[stack->idx[0]] = LONG_MAX;
-	ft_memmove(&stack->idx[0], &stack->idx[1], (stack->max_size - 1) * sizeof(int)); 
-	ft_memmove(&stack->part_idx[0], &stack->part_idx[1], (stack->max_size - 1) * sizeof(int)); 
+	stack->nums[stack->idx[0]] = LONG_MAX;
+	ft_memmove(&stack->idx[0], &stack->idx[1], (stack->size - 1) * sizeof(int)); 
+	ft_memmove(&stack->part_idx[0], &stack->part_idx[1], (stack->size - 1) * sizeof(int)); 
+	stack->idx[(int)stack->size - 1] = INIT_IDX_VALUE;
+	stack->part_idx[(int)stack->size - 1] = INIT_IDX_VALUE;
 	decrement_partition(stack, top_part_idx);
+	stack->size--;
     return (top_value);
 }
 
 static int	_get_next_free_idx(t_stack_ptr stack)
 {
-	size_t i;
+	int i;
 
-	i = 0;
-	while (i < stack->max_size)
-    {
+	i = -1;
+	while (++i < (int)stack->max_size)
 		if (stack->idx[i] == INIT_IDX_VALUE)
-			break ;
-        i++;
-    }
-	if (0 == i)
+			return (i);
+	if ((int)stack->max_size == i)
 		i = -1;
 	return (i);
 }
@@ -124,15 +115,17 @@ bool	push_stack(t_stack_ptr stack, int num, t_partition_ptr partition)
 {
 	const int idx = _get_next_free_idx(stack);
 	
-    if (NULL == partition)
+    if (NULL == partition || -1 == idx)
         return (false);
-    stack->nums[idx] = num;
+    fprintf(stderr, "Pushing %d on s:%d at idx:%d", num, stack->id, idx);
+	stack->nums[idx] = num;
 	ft_memmove(&stack->idx[1], &stack->idx[0], (stack->max_size - 1) * sizeof(int));
 	stack->idx[0] = idx;
 	ft_memmove(&stack->part_idx[1], &stack->part_idx[0], (stack->max_size - 1) * sizeof(int));
 	stack->part_idx[0] = partition->id;
+	stack->size++;
     if (false == increment_partition(stack, partition->id))
-        return (false);
+		return (false);
     return (true);
 }
 
@@ -190,13 +183,17 @@ void print_stack_id(t_stack_ptr stack)
     write(1, "\n", 1);
 }
 
-void	print_stack(t_stack_ptr stack)
+/* Returns true if both are the same */
+bool	stack_compare(int a, t_stack_ptr b)
 {
-	const size_t size = stack->size;
-	if (0 == size)
-		return ;
-	for (size_t j = 0; j < size - 1; j++)
-		fprintf(stderr, " %ld", stack->nums[stack->idx[j]]);
-	fprintf(stderr,"|");
+	if (a == b->id)
+		return (true);
+	return (false);
 }
 
+int		get_stack_id(t_stack_ptr s)
+{
+	if (!s)
+		return (-1);
+	return(s->id);
+}

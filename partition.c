@@ -27,7 +27,7 @@ t_partition_ptr	create_partition(t_stack_ptr stack)
 			return (free(partition), NULL);
 		stack->partitions[partition->id] = partition;
 	}
-	fprintf(stderr,"Init'd part, id:%d stack:%d\n", partition->id, stack->id);
+	fprintf(stderr,"Log: Init'd part, id:%d stack:%d\n", partition->id, stack->id);
 	return (partition);
 }
 
@@ -47,7 +47,7 @@ bool	fill_partition(t_stack_ptr stack,
 	if (!stack || !partition || begin < 0 || end < begin || end >= (int)stack->size)
 		return (false);
 	i = begin;
-	fprintf(stderr, "init partition fill id:%d", partition->id);
+	fprintf(stderr, "Log: Init partition fill id:%d\n", partition->id);
 	while (i <= end)
 	{
 		stack->part_idx[i] = partition->id;
@@ -112,10 +112,10 @@ int		get_median(long *nums, int *idx, size_t size)
 	if (size % 2) //odd
 	{
 		fflush(stderr);
-		fprintf(stderr, "median:%ld|", arr[size / 2]);
+		fprintf(stderr, "Log: median:%ld\n", arr[size / 2]);
 		return (arr[size / 2]);
 	}
-	fprintf(stderr, "median:%ld|", arr[size / 2 -1 ]);
+	fprintf(stderr, "Log: median:%ld\n", arr[size / 2 -1 ]);
 	return (arr[size / 2 - 1]);
 }
 
@@ -136,19 +136,18 @@ t_partition_ptr get_top_partition(t_stack_ptr stack)
 {
 	if (NULL == stack)
 	{
-		fprintf(stderr, "hey top partition is NULLLL"); fflush(stderr);
+		fprintf(stderr, "hey stack is NULLLL"); fflush(stderr);
 		return (NULL);
 	}
 	const int part_id = stack->part_idx[0];
 	int i;
 	i = -1;
-	if (!part_id || INIT_IDX_VALUE == part_id)
-		fprintf(stderr, "bad part_id\n");
-	fprintf(stderr, "part_id:%d\n", part_id); fflush(stderr);
+	if (INIT_IDX_VALUE == part_id)
+		fprintf(stderr, "bad top num part_id\n");
+	fprintf(stderr, "Log: top num part_id:%d\n", part_id); fflush(stderr);
 	while (++i < MAX_PARTITIONS)
 		if (stack->partitions[i] && part_id == stack->partitions[i]->id)
 			return (stack->partitions[i]);
-	fprintf(stderr, "okay here\n");
 	if (i >= MAX_PARTITIONS)
 		return (NULL);
 	return (stack->partitions[i]);
@@ -157,4 +156,9 @@ t_partition_ptr get_top_partition(t_stack_ptr stack)
 int	get_partition_id(t_partition_ptr p)
 {
 	return (p->id);
+}
+
+long	peek_partition(t_partition_ptr p)
+{
+	return (peek_stack(p->stack));
 }

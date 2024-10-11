@@ -47,5 +47,5 @@ int					get_partition_id(t_partition_ptr);
 int 				get_next_free_partition_id(t_stack_ptr);
 int					get_top_partition_median(t_stack_ptr);
 size_t				get_partition_size(t_partition_ptr);
-	
+long				peek_partition(t_partition_ptr);
 #endif

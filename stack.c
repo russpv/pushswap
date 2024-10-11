@@ -86,13 +86,14 @@ long	pop_stack(t_stack_ptr stack)
     if (NULL == stack || 0 == stack->size)
 		return (LONG_MAX);
 	const long  top_value = stack->nums[stack->idx[0]];
-    const int   top_part_idx = stack->part_idx[0];
+    const t_partition_ptr   top_partition = get_top_partition(stack);
 	stack->nums[stack->idx[0]] = LONG_MAX;
 	ft_memmove(&stack->idx[0], &stack->idx[1], (stack->size - 1) * sizeof(int)); 
 	ft_memmove(&stack->part_idx[0], &stack->part_idx[1], (stack->size - 1) * sizeof(int)); 
 	stack->idx[(int)stack->size - 1] = INIT_IDX_VALUE;
 	stack->part_idx[(int)stack->size - 1] = INIT_IDX_VALUE;
-	decrement_partition(stack, top_part_idx);
+    if (false == decrement_partition(stack, top_partition->id))
+		return (false);
 	stack->size--;
     return (top_value);
 }
@@ -117,7 +118,8 @@ bool	push_stack(t_stack_ptr stack, int num, t_partition_ptr partition)
 	
     if (NULL == partition || -1 == idx)
         return (false);
-    fprintf(stderr, "Pushing %d on s:%d at idx:%d", num, stack->id, idx);
+    fprintf(stderr, "Log: Pushing %d on s:%d(%d) p:%d\n", num, stack->id, idx, \
+			partition->id);
 	stack->nums[idx] = num;
 	ft_memmove(&stack->idx[1], &stack->idx[0], (stack->max_size - 1) * sizeof(int));
 	stack->idx[0] = idx;

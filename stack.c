@@ -7,7 +7,7 @@ void	print_stack(t_stack_ptr stack)
 	if (0 == size)
 		return ;
 	for (size_t j = 0; j < size; j++)
-		fprintf(stderr, " %ld", stack->nums[stack->idx[j]]);
+		fprintf(stderr, " %ld(%d)", stack->nums[stack->idx[j]], stack->part_idx[j]);
 	fprintf(stderr,"|");
 }
 
@@ -46,8 +46,11 @@ void	destroy_stack(t_stack_ptr stack)
 	while (++i < MAX_PARTITIONS)
 	{
 		if (stack->partitions[i] != NULL)
-			destroy_partition(stack->partitions[i]);
-		stack->partitions[i] = NULL;
+        {
+            fprintf(stderr, "Destroy: part_%d destroyed..\n", stack->partitions[i]->id);
+			destroy_partition(&stack->partitions[i]);
+		    //stack->partitions[i] = NULL;
+        }
 	}
 	free(stack->idx);
     free(stack->part_idx);
@@ -85,7 +88,7 @@ long	pop_stack(t_stack_ptr stack)
 {
     if (NULL == stack || 0 == stack->size)
 		return (LONG_MAX);
-	const long  top_value = stack->nums[stack->idx[0]];
+	const long              top_value = stack->nums[stack->idx[0]];
     const t_partition_ptr   top_partition = get_top_partition(stack);
 	stack->nums[stack->idx[0]] = LONG_MAX;
 	ft_memmove(&stack->idx[0], &stack->idx[1], (stack->size - 1) * sizeof(int)); 
@@ -93,7 +96,7 @@ long	pop_stack(t_stack_ptr stack)
 	stack->idx[(int)stack->size - 1] = INIT_IDX_VALUE;
 	stack->part_idx[(int)stack->size - 1] = INIT_IDX_VALUE;
     if (false == decrement_partition(stack, top_partition->id))
-		return (false);
+		return (LONG_MAX);
 	stack->size--;
     return (top_value);
 }
@@ -135,6 +138,7 @@ bool	push_stack(t_stack_ptr stack, int num, t_partition_ptr partition)
 bool    rotate_stack(t_stack_ptr stack)
 {
 	int top_num_idx;
+    int top_part_id;
 
 	if (!stack || !stack->idx)
 		return (false);
@@ -143,6 +147,9 @@ bool    rotate_stack(t_stack_ptr stack)
 	top_num_idx = stack->idx[0];
 	ft_memmove(&stack->idx[0], &stack->idx[1], (stack->size - 1) * sizeof(int));
    	stack->idx[stack->size - 1] = top_num_idx;
+    top_part_id = stack->part_idx[0];
+    ft_memmove(&stack->part_idx[0], &stack->part_idx[1], (stack->size - 1) * sizeof(int));
+    stack->part_idx[stack->size - 1] = top_part_id;
     return (true);
 }
 
@@ -150,6 +157,7 @@ bool    rotate_stack(t_stack_ptr stack)
 bool    rev_rotate_stack(t_stack_ptr stack)
 {
 	int last_num_idx;
+    int last_part_id;
 
 	if (!stack || !stack->idx)
         return (false);
@@ -158,6 +166,9 @@ bool    rev_rotate_stack(t_stack_ptr stack)
 	last_num_idx = stack->idx[stack->size - 1];
 	ft_memmove(&stack->idx[1], &stack->idx[0], (stack->size - 1) * sizeof(int));
    	stack->idx[0] = last_num_idx;
+    last_part_id = stack->part_idx[stack->size - 1];
+    ft_memmove(&stack->part_idx[1], &stack->part_idx[0], (stack->size - 1) * sizeof(int));
+    stack->part_idx[0] = last_part_id;
     return (true);
 }
 

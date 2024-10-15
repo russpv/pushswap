@@ -31,9 +31,10 @@ t_partition_ptr	create_partition(t_stack_ptr stack)
 	return (partition);
 }
 
-void    destroy_partition(t_partition_ptr p)
+void    destroy_partition(t_partition_ptr *p)
 {
-    free(p);
+    free(*p);
+    *p = NULL;
 }
 
 /* Modifies stack partition id array */
@@ -69,7 +70,10 @@ bool    decrement_partition(t_stack_ptr s, int idx)
     if (NULL == s->partitions[idx])
         return (false);
     if (1 == s->partitions[idx]->size)
-        destroy_partition(s->partitions[idx]);
+    {
+        s->partitions[idx]->size--;
+        destroy_partition(&s->partitions[idx]);
+    }
     else
         s->partitions[idx]->size--;
     return (true);

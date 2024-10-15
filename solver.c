@@ -37,7 +37,7 @@
 // conditionally create a starting partition ...
 void	solve(t_state *s)
 {
-	int rot_counter = 0;
+	//int rot_counter = 0;
 	t_partition_ptr	top_partition = get_top_partition(s->curr_stack);
 	size_t i = 0;
 	size_t limit = get_partition_size(top_partition);
@@ -45,8 +45,10 @@ void	solve(t_state *s)
 
 	++s->curr_pass;
 	fprintf(stderr, "HERE");
-	if (s->curr_pass > s->passes)
+	if (s->curr_pass > s->passes) {
+        fprintf(stderr, "Passes finished. Returning...\n");
 		return;
+    }
 	if (limit < 4)
 		fprintf(stderr, "Too few to quicksort, insertion sort.\n");
 	fprintf(stderr, "Solve: this pass:%d\n", s->curr_pass); fflush(stderr);
@@ -62,36 +64,30 @@ void	solve(t_state *s)
 	if (!top_partition)
 		err("Error: partition get error", s);
 	s->pivot = get_top_partition_median(s->curr_stack);
+    fprintf(stderr, "Solve: median value %ld\n", s->pivot);
 	create_destination_partitions(s, &dest_partitions);
 	fprintf(stderr, "Solve: two partitions created\n");
 	while (i < limit)
 	{
-		fprintf(stderr, "Solve: %zu loop started (%zu moves remaining)\n", i, \
-				get_partition_size(top_partition));
+		fprintf(stderr, "Solve: %zu loop started (%zu moves remaining p:%d)\n", i, \
+				get_partition_size(top_partition),\
+                get_partition_id(top_partition));
 		print_stacks(s); 
 		if (peek_stack(s->curr_stack) <= s->pivot)
 		{
 			fprintf(stderr, "Solve: %ld below median %ld\n", peek_stack(s->curr_stack), s->pivot);
-			if (s->curr_pass % 2) { //to Stack B
-				fprintf(stderr,"Solve: push\n");
-				push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[0]);
-				fprintf(stderr,"Solve: rot\n");
-				rotate_stack(s->dest_stack); /* TODO: wasted move if all same grouping on stack */
-			}
-			else { //Back to A
-				//rot_counter++; /* move bottoms later */
-			}
+			fprintf(stderr,"Solve: push\n");
+			push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[0]);
+			print_stacks(s);
+            fprintf(stderr,"Solve: rot\n");
+			rotate_stack(s->dest_stack); /* TODO: wasted move if all same grouping on stack */
 		}
 		else //value is large
 		{
-			if (s->curr_pass % 2) //to Stack B
-			{
-				fprintf(stderr, "Solve: push\n");
-				push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[1]);
-				rot_counter++;
-			}
-			else {
-			}
+			fprintf(stderr, "Solve: push\n");
+			push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[1]);
+//			rot_counter++;
+		
 		}
 		print_stacks(s);
 		fprintf(stderr, "##(end round)##\n\n"); fflush(stderr);
@@ -103,7 +99,7 @@ void	solve(t_state *s)
 	}*/
 	print_stacks(s);
 	flip_curr_stack(s); /* finished with all stack partitions, next split */
-	fprintf(stderr, "here");
+	fprintf(stderr, "Solve: calling solve()\n");
 	solve(s);
 }
 

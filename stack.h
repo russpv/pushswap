@@ -33,7 +33,7 @@ int			get_stack_id(t_stack_ptr);
 /* Stack->Partition methods */
 
 t_partition_ptr		create_partition(t_stack_ptr);
-void 				destroy_partition(t_partition_ptr);
+void 				destroy_partition(t_partition_ptr *);
 bool 				fill_partition(t_stack_ptr stack, \
 									t_partition_ptr partition, \
 									int begin, \

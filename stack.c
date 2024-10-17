@@ -1,5 +1,17 @@
 #include "stack_int.h"
 
+void	mydebug(const char *format, ...)
+{
+	if (LOGGING == true)
+	{
+		fprintf(stderr, "%s", GREY);
+		va_list	args;
+		va_start(args, format);
+		vfprintf(stderr, format, args);
+		va_end(args);
+		fprintf(stderr, "%s", RESET); 
+	}
+}
 // TODO delete
 void	print_stack(t_stack_ptr stack)
 {
@@ -7,8 +19,8 @@ void	print_stack(t_stack_ptr stack)
 	if (0 == size)
 		return ;
 	for (size_t j = 0; j < size; j++)
-		fprintf(stderr, " %ld(%d)", stack->nums[stack->idx[j]], stack->part_idx[j]);
-	fprintf(stderr,"|");
+		mydebug(" %ld(%d)", stack->nums[stack->idx[j]], stack->part_idx[j]);
+	mydebug("|");
 }
 
 t_stack_ptr	create_stack(const char id, const size_t size)
@@ -35,7 +47,7 @@ t_stack_ptr	create_stack(const char id, const size_t size)
             stack->idx[i] = INIT_IDX_VALUE;
             stack->part_idx[i++] = INIT_IDX_VALUE; 
         }
-	}
+	}	
 	return (stack);
 }
 
@@ -48,9 +60,8 @@ void	destroy_stack(t_stack_ptr stack)
 	{
 		if (stack->partitions[i] != NULL)
         {
-            fprintf(stderr, "Destroy: part_%d destroyed..\n", stack->partitions[i]->id);
+            mydebug("Destroy: part_%d destroyed..\n", stack->partitions[i]->id);
 			destroy_partition(&stack->partitions[i]);
-		    //stack->partitions[i] = NULL;
         }
 	}
 	free(stack->idx);
@@ -122,7 +133,7 @@ bool	push_stack(t_stack_ptr stack, int num, t_partition_ptr partition)
 	
     if (NULL == partition || -1 == idx)
         return (false);
-    fprintf(stderr, "Log: Pushing %d on s:%d(%d) p:%d\n", num, stack->id, idx, \
+    mydebug("Log: Pushing %d on s:%d(%d) p:%d\n", num, stack->id, idx, \
 			partition->id);
 	stack->nums[idx] = num;
 	ft_memmove(&stack->idx[1], &stack->idx[0], (stack->max_size - 1) * sizeof(int));
@@ -210,4 +221,24 @@ int		get_stack_id(t_stack_ptr s)
 	if (!s)
 		return (-1);
 	return(s->id);
+}
+
+size_t	get_stack_size(t_stack_ptr s)
+{
+	if (!s)
+		return (0);
+	return (s->size);
+}
+bool	is_full(t_stack_ptr s)
+{
+	if (!s)
+		return (false);
+	return (s->size == s->max_size);
+}
+
+long	get_stack_num(t_stack_ptr s, size_t idx)
+{
+	if (!s)
+		return (LONG_MAX);
+	return (s->nums[s->idx[idx]]);
 }

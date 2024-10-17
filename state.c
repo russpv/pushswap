@@ -35,16 +35,16 @@ bool	fill_stack_a(t_state *s)
 
 	if (!fill_stack(a, s->argv))
 		return (false);
-	fprintf(stderr, "State: stack filled\n");
+	mylog( "State: stack filled\n");
 	if (get_partition_id(p) == 0)
-		fprintf(stderr, "Log: partition enumeration correct\n");
+		mylog( "Log: partition enumeration correct\n");
 	else
-		fprintf(stderr, "Error: partition enumeration ERRPR\n");
+		mylog( "Error: partition enumeration ERRPR\n");
 	if (!fill_partition(a, p, TOP_IDX, bottom_idx))
 		return (false);
 	s->curr_stack = s->stacks[STACK_A];
 	s->dest_stack = s->stacks[STACK_B];
-	fprintf(stderr, "State: first STACKA part created.\n");
+	mylog( "State: first STACKA part created.\n");
 	return (true);
 }
 
@@ -56,7 +56,7 @@ void	create_destination_partitions(t_state *s, t_partition_ptr (*d)[2])
 		dest_stack = s->stacks[1];
 	else
 		dest_stack = s->stacks[0];
-	fprintf(stderr, "Log: Creating dest parts stack:%d...\n", get_stack_id(dest_stack));
+	mylog( "Log: Creating dest parts stack:%d...\n", get_stack_id(dest_stack));
 	(*d)[0] = create_partition(dest_stack);
 	(*d)[1] = create_partition(dest_stack);
 }
@@ -73,16 +73,16 @@ void	flip_curr_stack(t_state *s)
 		s->curr_stack = s->stacks[STACK_A];
 		s->dest_stack = s->stacks[STACK_B];
 	}
-	fprintf(stderr, "State: stacks flipped\n");
+	mylog( "State: stacks flipped\n");
 }
 
 void	print_stacks(t_state *s)
 { 
-	fprintf(stderr,"a:");
+	mylog("a:");
     print_stack(s->stacks[STACK_A]);
-	fprintf(stderr,"\nb:");
+	mylog("\nb:");
     print_stack(s->stacks[STACK_B]);
-	fprintf(stderr,"\n");
+	mylog("\n");
 }
 
 void	rotate_both(t_state *s)

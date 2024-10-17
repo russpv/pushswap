@@ -10,7 +10,9 @@
 # include <limits.h>
 
 # define STACKS 2
-
+# define GREY "\033[90m"
+# define LTGREY "\033[38;5;245m"
+# define RESET "\033[0m"
 enum e_stacks
 {
 	STACK_A,
@@ -51,6 +53,7 @@ int		sorted(t_state *);
 
 // err.c
 void		err(char *, t_state *);
+void		mylog(const char *format, ...);
 
 // utils.c
 void	print_stacks(t_state *);

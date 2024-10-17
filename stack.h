@@ -7,6 +7,8 @@
 # include <limits.h>
 # include <stdbool.h>
 
+# define LOGGING true
+
 /* Stack ADT */
 /* Forward definitions */
 struct s_stack;
@@ -14,6 +16,10 @@ struct s_partition;
 
 typedef struct s_stack *t_stack_ptr;
 typedef struct s_partition *t_partition_ptr;
+
+/* util */
+
+void		mydebug(const char *format, ...);
 
 /* Stack methods */
 
@@ -25,10 +31,15 @@ long	 	pop_stack(t_stack_ptr);
 long		peek_stack(t_stack_ptr);
 bool		rotate_stack(t_stack_ptr);
 bool		rev_rotate_stack(t_stack_ptr);
-void		print_stack(t_stack_ptr);
+
 bool		stack_compare(int, t_stack_ptr);
 bool        is_sorted_asc(t_stack_ptr);
+bool		is_full(t_stack_ptr);
+
+void		print_stack(t_stack_ptr);
 int			get_stack_id(t_stack_ptr);
+size_t		get_stack_size(t_stack_ptr);
+long		get_stack_num(t_stack_ptr, size_t);
 size_t      get_partition_count(t_stack_ptr);
 
 /* Stack->Partition methods */

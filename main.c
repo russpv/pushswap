@@ -31,7 +31,7 @@ static void	_solve(t_state *state)
 {
 	fill_stack_a(state);
 	print_stacks(state);
-	fprintf(stderr, "Main: ready to solve\n");
+	mylog( "Main: ready to solve\n");
 	if (is_done(state) == false)
 		solver(state);
 	return ;

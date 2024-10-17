@@ -29,6 +29,7 @@ void		print_stack(t_stack_ptr);
 bool		stack_compare(int, t_stack_ptr);
 bool        is_sorted_asc(t_stack_ptr);
 int			get_stack_id(t_stack_ptr);
+size_t      get_partition_count(t_stack_ptr);
 
 /* Stack->Partition methods */
 

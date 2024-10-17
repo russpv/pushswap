@@ -38,9 +38,12 @@
 void	solve(t_state *s)
 {
 	//int rot_counter = 0;
-	t_partition_ptr	top_partition = get_top_partition(s->curr_stack);
-	size_t i = 0;
-	size_t limit = get_partition_size(top_partition);
+	t_partition_ptr	top_partition = NULL;
+	size_t i;;
+    size_t j = 0;
+	size_t limit;
+    int rot_counter =0;
+    const size_t partitions = get_partition_count(s->curr_stack);
 	t_partition_ptr dest_partitions[2];
 
 	++s->curr_pass;
@@ -49,50 +52,62 @@ void	solve(t_state *s)
         fprintf(stderr, "Passes finished. Returning...\n");
 		return;
     }
-	if (limit < 4)
-		fprintf(stderr, "Too few to quicksort, insertion sort.\n");
 	fprintf(stderr, "Solve: this pass:%d\n", s->curr_pass); fflush(stderr);
-	// TODO another while loop to complete all x-tiles in the pass
-	// 1. Split partition on stack
-	// 1a. Get or create partition on stack (assume filled partition earlier)
-	// 1b. Create two partitions on the destination stack
-	// 1c. Iterate and push to destination stack
-	fprintf(stderr, "Solve: top partition: %p size:%zu id:%d value:%ld\n", top_partition, \
-			get_partition_size(top_partition),\
-				get_partition_id(top_partition), \
-				peek_partition(top_partition));
-	if (!top_partition)
-		err("Error: partition get error", s);
-	s->pivot = get_top_partition_median(s->curr_stack);
-    fprintf(stderr, "Solve: median value %ld\n", s->pivot);
-	create_destination_partitions(s, &dest_partitions);
-	fprintf(stderr, "Solve: two partitions created\n");
-	while (i < limit)
-	{
-		fprintf(stderr, "Solve: %zu loop started (%zu moves remaining p:%d)\n", i, \
-				get_partition_size(top_partition),\
-                get_partition_id(top_partition));
-		print_stacks(s); 
-		if (peek_stack(s->curr_stack) <= s->pivot)
-		{
-			fprintf(stderr, "Solve: %ld below median %ld\n", peek_stack(s->curr_stack), s->pivot);
-			fprintf(stderr,"Solve: push\n");
-			push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[0]);
-			print_stacks(s);
-            fprintf(stderr,"Solve: rot\n");
-			rotate_stack(s->dest_stack); /* TODO: wasted move if all same grouping on stack */
-		}
-		else //value is large
-		{
-			fprintf(stderr, "Solve: push\n");
-			push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[1]);
-//			rot_counter++;
-		
-		}
-		print_stacks(s);
-		fprintf(stderr, "##(end round)##\n\n"); fflush(stderr);
-		i++;
-	}
+	while (j < partitions)
+    {
+        i = 0;
+        top_partition = get_top_partition(s->curr_stack);
+        fprintf(stderr, "Solve: top partition: %p size:%zu id:%d value:%ld\n", top_partition, \
+                get_partition_size(top_partition),\
+                    get_partition_id(top_partition), \
+                    peek_partition(top_partition));
+        if (!top_partition)
+            err("Error: partition get error", s);
+        s->pivot = get_top_partition_median(s->curr_stack);
+        fprintf(stderr, "Solve: median value %ld\n", s->pivot);
+        create_destination_partitions(s, &dest_partitions);
+        fprintf(stderr, "Solve: two partitions created\n");
+	    limit = get_partition_size(top_partition);
+        if (limit < 4)
+            fprintf(stderr, "Too few to quicksort, insertion sort.\n");
+        rot_counter = 0;
+        while (i < limit)
+	    {
+            fprintf(stderr, "Solve: %zu loop started (%zu moves remaining p:%d)\n", i, \
+                    get_partition_size(top_partition),\
+                    get_partition_id(top_partition));
+            print_stacks(s); 
+            if (peek_stack(s->curr_stack) <= s->pivot)
+            {
+                fprintf(stderr, "Solve: %ld below median %ld\n", peek_stack(s->curr_stack), s->pivot);
+                fprintf(stderr,"Solve: push\n");
+                push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[0]);
+                print_stacks(s);
+                fprintf(stderr,"Solve: rot\n");
+                if (s->curr_pass % 2 != 0)
+                    rotate_stack(s->dest_stack); /* TODO: wasted move if all same grouping on stack */
+                else
+                    rot_counter++; // when pushing back to stack a, we want lower numbers on top
+            }
+            else //value is large
+            {
+                fprintf(stderr, "Solve: push\n");
+                push_stack(s->dest_stack, pop_stack(s->curr_stack), dest_partitions[1]);
+                //if (!s->curr_pass % 2)
+                   // rot_counter++;
+            }
+            print_stacks(s);
+            fprintf(stderr, "##(end round)##\n\n"); fflush(stderr);
+            i++;
+        }
+        while (rot_counter-- >= 0) {
+            fprintf(stderr, "Solve: rot\n");
+            rotate_stack(s->dest_stack); // move bottoms
+        }
+        dest_partitions[0] = NULL;
+        dest_partitions[1] = NULL;
+        j++;
+    }
 /*	 while (rot_counter--) {//TODO init rot_counter
 		fprintf(stderr, "Solve: rot\n");
 		rotate_stack(s->dest_stack); // move bottoms

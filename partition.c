@@ -26,6 +26,7 @@ t_partition_ptr	create_partition(t_stack_ptr stack)
 		if (-1 == partition->id)
 			return (free(partition), NULL);
 		stack->partitions[partition->id] = partition;
+        stack->partition_count++;
 	}
 	fprintf(stderr,"Log: Init'd part, id:%d stack:%d\n", partition->id, stack->id);
 	return (partition);
@@ -72,6 +73,7 @@ bool    decrement_partition(t_stack_ptr s, int idx)
     if (1 == s->partitions[idx]->size)
     {
         s->partitions[idx]->size--;
+        s->partition_count--;
         destroy_partition(&s->partitions[idx]);
     }
     else
@@ -160,6 +162,11 @@ t_partition_ptr get_top_partition(t_stack_ptr stack)
 int	get_partition_id(t_partition_ptr p)
 {
 	return (p->id);
+}
+
+size_t  get_partition_count(t_stack_ptr s)
+{
+    return (s->partition_count);
 }
 
 long	peek_partition(t_partition_ptr p)

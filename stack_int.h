@@ -16,7 +16,8 @@ struct	s_stack
 	long				*nums; // actual integers, not modified
 	int					*idx;  // order index of nums, ops modify this
 	int					*part_idx;  // partition id, 1:1 with nums
-	t_partition_ptr 	partitions[MAX_PARTITIONS];
+	size_t              partition_count;
+    t_partition_ptr 	partitions[MAX_PARTITIONS];
 };
 
 struct	s_partition

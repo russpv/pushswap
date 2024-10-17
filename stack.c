@@ -20,6 +20,7 @@ t_stack_ptr	create_stack(const char id, const size_t size)
 	{
 		stack->id = id;
 		stack->max_size = size;
+        stack->partition_count = 0;
 		stack->nums = malloc(sizeof(long) * size);
 		stack->idx = malloc(sizeof(int) * size);
         stack->part_idx = malloc(sizeof(int) * size);

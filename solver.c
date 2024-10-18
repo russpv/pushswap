@@ -29,7 +29,7 @@
 //dummy
 # define SMALL_NUMS 200
 # define LARGE_NUMS 600
-# define SORT_STOP 3
+# define SORT_STOP 20
 
 // no matter the state, the current partition will be absolutely larger or 
 // smaller than whats on the dest stack.
@@ -76,7 +76,7 @@ void	solve(t_state *s)
 
 	++s->curr_pass;
 	mylog( "\n########## PASS_%d ###\n", s->curr_pass);
-	if (get_partition_size(get_top_partition(s->curr_stack)) < SORT_STOP) {
+	if (s->dest_stack == s->stacks[STACK_A] && get_partition_size(get_top_partition(s->curr_stack)) < SORT_STOP) {
 		fprintf(stderr, "Too few to quicksort, insertion sort.\n");
 		insertion_sort(s);
 	}
@@ -120,8 +120,11 @@ void	solve(t_state *s)
                 print_stacks(s);
 				// to STACKB, largers stay on top
             	if (s->dest_stack == s->stacks[STACK_B]) {
-					mylog( "Solve: rot\n");
-                   	move(s->dest_stack, ROTATE); /* TODO: wasted move if all same grouping on stack */
+					if (get_partition_count(s->dest_stack) <= (size_t)2)
+					{
+						mylog( "Solve: rot\n");
+                   		move(s->dest_stack, ROTATE); /* TODO: wasted move if all same grouping on stack */
+					}
                 }
 				// back to STACKA, smallers go to bottom temporarily
 				else if (s->dest_stack == s->stacks[STACK_A]) {
@@ -134,11 +137,15 @@ void	solve(t_state *s)
             {
                 mylog( "Solve: push\n");
                 move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[1]);
-                /*if (s->dest_stack == s->stacks[STACK_B]) // largers stay on top, so temporarily go bottom
+                if (s->dest_stack == s->stacks[STACK_B]) // largers stay on top, so temporarily go bottom
                 {
-                    move(s->dest_stack, ROTATE);
-                    rot_counter++;
-                }*/
+					if (get_partition_count(s->dest_stack) > (size_t)2)
+                    {
+						mylog("Solve: rot\n");
+						move(s->dest_stack, ROTATE);
+                    	rot_counter++;
+					}
+                }
             }
             print_stacks(s);
             mylog( "##(end round)##\n\n"); fflush(stderr);
@@ -162,7 +169,7 @@ void	solve(t_state *s)
 void	solver(t_state *s)
 {
 	if (s->nums < SMALL_NUMS)
-		s->passes = 3;
+		s->passes = 10;
 	else if (s->nums < LARGE_NUMS)
 		s->passes = 10;
 	solve(s);

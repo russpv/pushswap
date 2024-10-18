@@ -242,3 +242,4 @@ long	get_stack_num(t_stack_ptr s, size_t idx)
 		return (LONG_MAX);
 	return (s->nums[s->idx[idx]]);
 }
+

@@ -37,6 +37,7 @@ bool        is_sorted_asc(t_stack_ptr);
 bool		is_full(t_stack_ptr);
 
 void		print_stack(t_stack_ptr);
+void        print_stack_id(t_stack_ptr);
 int			get_stack_id(t_stack_ptr);
 size_t		get_stack_size(t_stack_ptr);
 long		get_stack_num(t_stack_ptr, size_t);

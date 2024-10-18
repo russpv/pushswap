@@ -107,3 +107,49 @@ bool	is_done(t_state *s)
 		return (true);
 	return (false);
 }
+
+void    print_stack_name(t_stack_ptr s)
+{
+    if (get_stack_id(s) == STACK_A)
+        write(1, "a\n", 2);
+    else
+        write(1, "b\n", 2);
+}
+
+void    push(t_stack_ptr s, va_list args)
+{
+    const long num = va_arg(args, long);
+    const t_partition_ptr partition = va_arg(args, t_partition_ptr);
+    push_stack(s, num, partition);
+    write(1, "p", 1);
+    print_stack_name(s);
+}
+
+void    rotate(t_stack_ptr s, va_list args)
+{
+    (void)args;
+    rotate_stack(s);
+    write(1, "r", 1);
+    print_stack_name(s);
+}
+
+void    rev_rotate(t_stack_ptr s, va_list args)
+{
+    (void)args;
+    rev_rotate_stack(s);
+    write(1, "rr", 2);
+    print_stack_name(s);
+}
+
+void    move(t_stack_ptr s, enum e_move_type move, ...)
+{
+    const t_move jumptable[MOVE_COUNT] = {push, \
+        rotate, rev_rotate};
+    va_list args;
+
+    va_start(args, move);
+    if (move >= MOVE_COUNT && move < 0)
+        ft_printf("Invalid move\n");
+    jumptable[move](s, args);
+    va_end(args);
+}

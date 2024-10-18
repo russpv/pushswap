@@ -8,16 +8,27 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <limits.h>
+# include <stdarg.h>
 
 # define STACKS 2
 # define GREY "\033[90m"
 # define LTGREY "\033[38;5;245m"
 # define RESET "\033[0m"
+
 enum e_stacks
 {
 	STACK_A,
 	STACK_B
 };
+
+enum e_move_type{
+    PUSH,
+    ROTATE,
+    REV_ROTATE,
+    MOVE_COUNT
+};
+
+typedef void (*t_move)(t_stack_ptr, va_list);
 
 /* State data type */
 
@@ -43,6 +54,7 @@ bool	fill_stack_a(t_state *);
 void	create_destination_partitions(t_state *, t_partition_ptr (*)[2]);
 void    flip_curr_stack(t_state *);
 bool	is_done(t_state *);
+void    move(t_stack_ptr stack, enum e_move_type, ...);
 
 /* Program functions */
 // solver.c

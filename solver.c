@@ -30,7 +30,7 @@
 # define SMALL_NUMS 200
 # define LARGE_NUMS 600
 # define SORT_STOP 5
-# define PASSES 5
+# define PASSES 6
 
 // no matter the state, the current partition will be absolutely larger or 
 // smaller than whats on the dest stack.
@@ -53,33 +53,46 @@ void	insertion_sort(t_state *s)
 		int rot_counter = 0;
         int rev_counter = 0;
 
-//        if (peek_next_stack(b) > peek_stack(b)) /* swap */
-//            move(b, SWAP);
+        if (peek_next_stack(b) > peek_stack(b)) /* swap */
+            move(b, SWAP);
 		const long num = peek_stack(b);
-        if (get_stack_size(a) > 1)
+        if (get_stack_size(a) >= 1)
         {
-            fprintf(stderr, "here_%zu\n", get_stack_size(a)); fflush(stderr);
-            while (num > get_stack_num(a, rotates) && \
-                    rotates < get_stack_size(a))
-                rotates++; /* calc rotates TODO: calc if rev rotate better */
-            while (num < get_stack_num(a, get_stack_size(a) - 1 - rev_rotates) && \
-                    rev_rotates < get_stack_size(a))
-                rev_rotates++;
+            fprintf(stderr, "stack size=_%zu\n", get_stack_size(a)); fflush(stderr);
+			if (num > peek_bottom(a))
+				rotates = 1;
+			else if (num < peek_stack(a))
+			   ;
+			else	
+			{
+				while (num > get_stack_num(a, rotates) && \
+                    	rotates < get_stack_size(a))
+                	rotates++; 
+            	while (num < get_stack_num(a, get_stack_size(a) - 1 - rev_rotates) && \
+                	    rev_rotates < get_stack_size(a))
+                	rev_rotates++;
+			}
         }
         bool do_rotates = false;
+		bool do_rev_rotates = false;
         fprintf(stderr, "Counts Rot:%zu Rev:%zu\n", rotates, rev_rotates);
-        if (rev_rotates > rotates && rotates > 0)
+		if (rev_rotates == 0 && rotates == 0) /* new min num */
+			;
+		else if (rev_rotates > rotates && rotates > 0 && get_stack_size(a) > 1)
         {
             do_rotates = true;
+			fprintf(stderr, "Rotating\n");
             while (rotates-- > 0)
             {
                 move(a, ROTATE);
                 rot_counter++;
             }
         }
-        else if (rev_rotates <= rotates && rev_rotates > 0) 
+        else if (rev_rotates <= rotates && rev_rotates > 0 && get_stack_size(a) > 1) 
         {
-            do_rotates = false;
+            do_rev_rotates = true;
+			fprintf(stderr, "Reverse rotating\n");
+			rev_counter = 1; /* have to reverse the just-pushed num */
             while (rev_rotates-- > 0)
             {
                 move(a, REV_ROTATE);
@@ -87,14 +100,35 @@ void	insertion_sort(t_state *s)
             }
         }
         move(a, PUSH, pop_stack(b), partition);
+		if (rev_rotates == 0 && rotates == 1) /* new max num */
+			move(a, ROTATE);
         // check if the next num should be pushed on the way back
+        if (get_stack_size(a) == 2)
+		{
+			if (rotates > 0)
+			{
+				mylog("Rotating\n");
+				move(a, ROTATE);
+			}
+		}
 		if (do_rotates == true)
+		{
             while (rot_counter-- > 0)
-                move(a, REV_ROTATE);
-        else
+			{
+                move(a, REV_ROTATE); 
+				if (peek_stack(b) < peek_stack(a) && peek_stack(b) > peek_bottom(a))
+					move(a, PUSH, pop_stack(b), partition);
+			}
+		}
+        else if (do_rev_rotates == true)
+		{
             while (rev_counter-- > 0)
+			{
                 move(a, ROTATE);
-
+				if (peek_stack(b) < peek_stack(a) && peek_stack(b) > peek_bottom(a))
+					move(a, PUSH, pop_stack(b), partition);
+			}
+		}
         i++;
 	}
 	print_stacks(s);
@@ -102,9 +136,10 @@ void	insertion_sort(t_state *s)
 
 void    swap_both_if_needed(t_state *s)
 {
-    if (s->curr_stack == s->stacks[STACK_A]) /* */
+    if (s->curr_stack == s->stacks[STACK_A])
     {
-        if ((get_stack_size(s->dest_stack) > 2) && \
+        if ((get_stack_size(s->dest_stack) >= 2) && \
+				(get_stack_size(s->curr_stack) >= 2) && \
                 (peek_stack(s->curr_stack) > peek_next_stack(s->curr_stack)) && \
                 (peek_stack(s->dest_stack) < peek_next_stack(s->dest_stack)))
         {
@@ -112,14 +147,15 @@ void    swap_both_if_needed(t_state *s)
             swap_both(s);
         }
     } else {
-        if ((get_stack_size(s->dest_stack) > 2) && \
+        if ((get_stack_size(s->dest_stack) >= 2) && \
+				(get_stack_size(s->curr_stack) >=2 ) && \
                 (peek_stack(s->curr_stack) < peek_next_stack(s->curr_stack)) && \
                 (peek_stack(s->dest_stack) > peek_next_stack(s->dest_stack)))
         {
             mylog("Solve: swapping both\n");
                swap_both(s);
         }
-        }
+    }
 }
 
 void    swap_stack_if_needed(t_state *s)
@@ -210,7 +246,7 @@ void	solve(t_state *s)
 	++s->curr_pass;
 	mylog( "\n########## PASS_%d ###\n", s->curr_pass);
 	//if (s->dest_stack == s->stacks[STACK_A] && get_partition_size(get_top_partition(s->curr_stack)) < SORT_STOP) {
-	if (s->curr_pass == 4)
+	if (s->curr_pass == PASSES)
     {
         fprintf(stderr, "Doing insertion sort.\n");
 		insertion_sort(s);

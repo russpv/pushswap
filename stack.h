@@ -30,6 +30,7 @@ bool		push_stack(t_stack_ptr, int, t_partition_ptr);
 long	 	pop_stack(t_stack_ptr);
 long		peek_stack(t_stack_ptr);
 long        peek_next_stack(t_stack_ptr);
+long		peek_bottom(t_stack_ptr);
 bool		rotate_stack(t_stack_ptr);
 bool		rev_rotate_stack(t_stack_ptr);
 bool        swap_stack(t_stack_ptr);

@@ -92,14 +92,26 @@ bool	fill_stack(t_stack_ptr stack, char **argv)
 long	peek_stack(t_stack_ptr stack)
 {
     if (get_stack_size(stack) == 0)
+	{
         return (LONG_MAX);
+	}
 	return (stack->nums[stack->idx[0]]);
+}
+long	peek_bottom(t_stack_ptr stack)
+{
+	if (get_stack_size(stack) == 0)
+	{
+		return (LONG_MAX);
+	}
+	return (stack->nums[stack->idx[get_stack_size(stack) - 1]]);
 }
 
 long    peek_next_stack(t_stack_ptr stack)
 {
     if (get_stack_size(stack) < 2)
+	{
         return (LONG_MAX);
+	}
     return (stack->nums[stack->idx[1]]);
 }
 
@@ -181,7 +193,7 @@ bool    rev_rotate_stack(t_stack_ptr stack)
 {
 	int last_num_idx;
     int last_part_id;
-    const long num = peek_stack(stack); //TODO: write peek_bottom()
+    const long num = peek_bottom(stack); //TODO: write peek_bottom()
 
 	if (!stack || !stack->idx)
         return (false);
@@ -202,9 +214,13 @@ bool    swap_stack(t_stack_ptr stack)
 	int second_num_idx;
     
     if (!stack || !stack->idx)
+	{
         return (false);
+	}
 	if (stack->size <= 1)
+	{
 		return (false);
+	}
     second_num_idx = stack->idx[1];
     stack->idx[1] = stack->idx[0];
     stack->idx[0] = second_num_idx;

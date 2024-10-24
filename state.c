@@ -97,6 +97,13 @@ void	rev_rotate_both(t_state *s)
     rev_rotate_stack(s->stacks[1]);
 }
 
+void    swap_both(t_state *s)
+{
+    move(s->stacks[0], SWAP, 0, NULL, PRINT_OFF);
+    move(s->stacks[1], SWAP, 0, NULL, PRINT_OFF);
+    write(1, "ss\n", 3);
+}
+
 bool	is_done(t_state *s)
 {
 	if (!s)
@@ -120,7 +127,8 @@ void    push(t_stack_ptr s, va_list args)
 {
     const long num = va_arg(args, long);
     const t_partition_ptr partition = va_arg(args, t_partition_ptr);
-    push_stack(s, num, partition);
+    if (push_stack(s, num, partition) == false)
+        exit(1);
     write(1, "p", 1);
     print_stack_name(s);
 }
@@ -128,7 +136,8 @@ void    push(t_stack_ptr s, va_list args)
 void    rotate(t_stack_ptr s, va_list args)
 {
     (void)args;
-    rotate_stack(s);
+    if (rotate_stack(s) == false)
+        exit(1);
     write(1, "r", 1);
     print_stack_name(s);
 }
@@ -136,15 +145,29 @@ void    rotate(t_stack_ptr s, va_list args)
 void    rev_rotate(t_stack_ptr s, va_list args)
 {
     (void)args;
-    rev_rotate_stack(s);
+    if (rev_rotate_stack(s) == false)
+        exit(1);
     write(1, "rr", 2);
+    print_stack_name(s);
+}
+
+void    swap(t_stack_ptr s, va_list args)
+{
+    va_arg(args, long);
+    va_arg(args, t_partition_ptr);
+    const int print = va_arg(args, int);
+    if (swap_stack(s) == false)
+        exit(1);
+    if (print == PRINT_OFF)
+        return ;
+    write(1, "s", 1);
     print_stack_name(s);
 }
 
 void    move(t_stack_ptr s, enum e_move_type move, ...)
 {
     const t_move jumptable[MOVE_COUNT] = {push, \
-        rotate, rev_rotate};
+        rotate, rev_rotate, swap};
     va_list args;
 
     va_start(args, move);

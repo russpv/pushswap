@@ -29,7 +29,8 @@
 //dummy
 # define SMALL_NUMS 200
 # define LARGE_NUMS 600
-# define SORT_STOP 20
+# define SORT_STOP 5
+# define PASSES 5
 
 // no matter the state, the current partition will be absolutely larger or 
 // smaller than whats on the dest stack.
@@ -37,48 +38,183 @@
 // A>B will be larger
 // I want this to run only B>A, the final pass.
 // can write this per partition or per stack. might as well per stack.
+/* This is run only on Stack B */
 void	insertion_sort(t_state *s)
 {
+    
 	int i = 0;
-	const t_partition_ptr partition = create_partition(s->dest_stack);
-	while (i < (int)s->nums)
+    const t_stack_ptr b = s->curr_stack;
+    const t_stack_ptr a = s->dest_stack;
+	const t_partition_ptr partition = create_partition(a);
+	while (i < (int)s->nums) /* iterate over all nums */
 	{
-		const long num = peek_stack(s->curr_stack);
-		const t_stack_ptr b = s->curr_stack;
-		const t_stack_ptr a = s->dest_stack;
 		size_t rotates = 0;
+        size_t rev_rotates = 0;
 		int rot_counter = 0;
-		while (num > get_stack_num(a, rotates) && \
-				rotates < get_stack_size(a))
-			rotates++;
-		while (rotates-- > 0)
-		{
-			move(a, ROTATE);
-			rot_counter++;
-		}
+        int rev_counter = 0;
+
+//        if (peek_next_stack(b) > peek_stack(b)) /* swap */
+//            move(b, SWAP);
+		const long num = peek_stack(b);
+        if (get_stack_size(a) > 1)
+        {
+            fprintf(stderr, "here_%zu\n", get_stack_size(a)); fflush(stderr);
+            while (num > get_stack_num(a, rotates) && \
+                    rotates < get_stack_size(a))
+                rotates++; /* calc rotates TODO: calc if rev rotate better */
+            while (num < get_stack_num(a, get_stack_size(a) - 1 - rev_rotates) && \
+                    rev_rotates < get_stack_size(a))
+                rev_rotates++;
+        }
+        bool do_rotates = false;
+        fprintf(stderr, "Counts Rot:%zu Rev:%zu\n", rotates, rev_rotates);
+        if (rev_rotates > rotates && rotates > 0)
+        {
+            do_rotates = true;
+            while (rotates-- > 0)
+            {
+                move(a, ROTATE);
+                rot_counter++;
+            }
+        }
+        else if (rev_rotates <= rotates && rev_rotates > 0) 
+        {
+            do_rotates = false;
+            while (rev_rotates-- > 0)
+            {
+                move(a, REV_ROTATE);
+                rev_counter++;
+            }
+        }
         move(a, PUSH, pop_stack(b), partition);
-		while (rot_counter-- > 0)
-            move(a, REV_ROTATE);
+        // check if the next num should be pushed on the way back
+		if (do_rotates == true)
+            while (rot_counter-- > 0)
+                move(a, REV_ROTATE);
+        else
+            while (rev_counter-- > 0)
+                move(a, ROTATE);
+
         i++;
 	}
 	print_stacks(s);
 }	
 
+void    swap_both_if_needed(t_state *s)
+{
+    if (s->curr_stack == s->stacks[STACK_A]) /* */
+    {
+        if ((get_stack_size(s->dest_stack) > 2) && \
+                (peek_stack(s->curr_stack) > peek_next_stack(s->curr_stack)) && \
+                (peek_stack(s->dest_stack) < peek_next_stack(s->dest_stack)))
+        {
+            mylog("Solve: swapping both\n");
+            swap_both(s);
+        }
+    } else {
+        if ((get_stack_size(s->dest_stack) > 2) && \
+                (peek_stack(s->curr_stack) < peek_next_stack(s->curr_stack)) && \
+                (peek_stack(s->dest_stack) > peek_next_stack(s->dest_stack)))
+        {
+            mylog("Solve: swapping both\n");
+               swap_both(s);
+        }
+        }
+}
+
+void    swap_stack_if_needed(t_state *s)
+{
+    if (s->dest_stack == s->stacks[STACK_A] && \
+        (peek_stack(s->curr_stack) < peek_next_stack(s->curr_stack)))
+        move(s->curr_stack, SWAP, 0, NULL, PRINT_ON);
+    else if (s->dest_stack == s->stacks[STACK_B] && \
+            (peek_stack(s->curr_stack) > peek_next_stack(s->curr_stack)))
+        move(s->curr_stack, SWAP, 0, NULL, PRINT_ON);
+}
+
+void    process_partition(t_state *s, t_partition_ptr top_partition, t_partition_ptr partition, size_t limit)
+{
+    size_t i = 0;
+    int rot_counter = 0;
+    t_partition_ptr dest_partitions[2];
+    create_destination_partitions(s, &dest_partitions);
+    while (i < limit)
+    {
+        mylog( "Solve: %zu loop started (%zu moves remaining p:%d, %zu p's)\n", i, \
+                get_partition_size(partition),\
+                get_partition_id(partition),
+                get_partition_count(s->curr_stack));
+        print_stacks(s); 
+        swap_both_if_needed(s);
+        if (peek_stack(s->curr_stack) <= s->pivot)
+        {
+            if (peek_next_stack(s->curr_stack) <= s->pivot && get_stack_size(s->curr_stack) > 2)
+                swap_stack_if_needed(s);
+            mylog( "Solve: %ld below median %ld\n", peek_stack(s->curr_stack), s->pivot);
+            mylog( "Solve: push\n");
+            move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[0]);
+            print_stacks(s);
+            // to STACKB, largers stay on top
+            if (s->dest_stack == s->stacks[STACK_B]) {
+                if (partition == top_partition) /* if first partition sorting, only rotate */
+                {
+                    mylog( "Solve: rot\n");
+                    move(s->dest_stack, ROTATE); /* TODO: wasted move if all same grouping on stack */
+                } /* if not top partition, don't rotate smallers */
+            }
+            // back to STACKA, smallers go to bottom temporarily
+            else if (s->dest_stack == s->stacks[STACK_A] && partition != top_partition) { /* never an empty stack, except first partition sorting */
+                mylog( "Solve: rot + banking revrot\n");
+                move(s->dest_stack, ROTATE);
+                rot_counter++;
+            }
+        }
+        else //value is large
+        {
+            if (peek_next_stack(s->curr_stack) > s->pivot && get_stack_size(s->curr_stack) > 2)
+                swap_stack_if_needed(s);
+            mylog( "Solve: push\n");
+            move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[1]);
+            if (s->dest_stack == s->stacks[STACK_B]) // largers stay on top, so temporarily go bottom
+            {
+                if (partition != top_partition) /* if not top partition, rotate largers and reverse rotate later */
+                {
+                    mylog("Solve: rot + reverse later\n");
+                    move(s->dest_stack, ROTATE);
+                    rot_counter++;
+                } /* if top partition, don't rotate */
+            }
+            else if (s->dest_stack == s->stacks[STACK_A] &&  partition == top_partition)
+            {
+                mylog("Solve: rot\n");
+                move(s->dest_stack, ROTATE);
+            }
+        }
+        print_stacks(s);
+        mylog( "##(end round)##\n\n"); fflush(stderr);
+        i++;
+    }
+    while (rot_counter-- > 0) { 
+        mylog( "Solve: rot counter rot\n");
+        move(s->dest_stack,REV_ROTATE); // move bottoms
+        print_stacks(s);
+    }
+}
+
 void	solve(t_state *s)
 {
-	t_partition_ptr	top_partition = NULL;
-	size_t i;
+	const t_partition_ptr	top_partition = get_top_partition(s->curr_stack);
     size_t j = 0;
-	size_t limit;
-    int rot_counter = 0;
     const size_t partitions = get_partition_count(s->curr_stack);
-	t_partition_ptr dest_partitions[2];
 
 	++s->curr_pass;
 	mylog( "\n########## PASS_%d ###\n", s->curr_pass);
-	if (s->dest_stack == s->stacks[STACK_A] && get_partition_size(get_top_partition(s->curr_stack)) < SORT_STOP) {
-		fprintf(stderr, "Too few to quicksort, insertion sort.\n");
+	//if (s->dest_stack == s->stacks[STACK_A] && get_partition_size(get_top_partition(s->curr_stack)) < SORT_STOP) {
+	if (s->curr_pass == 4)
+    {
+        fprintf(stderr, "Doing insertion sort.\n");
 		insertion_sort(s);
+        return ;
 	}
 	if (is_sorted_asc(s->stacks[STACK_A]) && is_full(s->stacks[STACK_A])) {
 		mylog( "Stack A is sorted!! Returning ...\n");
@@ -90,74 +226,17 @@ void	solve(t_state *s)
     }
 	while (j < partitions)
     {
-        i = 0;
-        top_partition = get_top_partition(s->curr_stack);
+        t_partition_ptr curr_partition = get_top_partition(s->curr_stack);
 		mylog("####### PASS %d, LOOP %zu ##\n", s->curr_pass, j);
-        mylog( "Solve: top partition: %p size:%zu id:%d value:%ld\n", top_partition, \
-                get_partition_size(top_partition),\
-                    get_partition_id(top_partition), \
-                    peek_partition(top_partition));
-        if (!top_partition)
+        mylog( "Solve: top partition: %p size:%zu id:%d value:%ld\n", curr_partition, \
+                get_partition_size(curr_partition),\
+                    get_partition_id(curr_partition), \
+                    peek_partition(curr_partition));
+        if (!curr_partition)
             err("Error: partition get error", s);
         s->pivot = get_top_partition_median(s->curr_stack);
         mylog( "Solve: median value %ld\n", s->pivot);
-        create_destination_partitions(s, &dest_partitions);
-        mylog( "Solve: two partitions created\n");
-	    limit = get_partition_size(top_partition);
-        rot_counter = 0;
-        while (i < limit)
-	    {
-            mylog( "Solve: %zu loop started (%zu moves remaining p:%d, %zu p's)\n", i, \
-                    get_partition_size(top_partition),\
-                    get_partition_id(top_partition),
-					partitions);
-            print_stacks(s); 
-            if (peek_stack(s->curr_stack) <= s->pivot)
-            {
-                mylog( "Solve: %ld below median %ld\n", peek_stack(s->curr_stack), s->pivot);
-                mylog( "Solve: push\n");
-                move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[0]);
-                print_stacks(s);
-				// to STACKB, largers stay on top
-            	if (s->dest_stack == s->stacks[STACK_B]) {
-					if (get_partition_count(s->dest_stack) <= (size_t)2)
-					{
-						mylog( "Solve: rot\n");
-                   		move(s->dest_stack, ROTATE); /* TODO: wasted move if all same grouping on stack */
-					}
-                }
-				// back to STACKA, smallers go to bottom temporarily
-				else if (s->dest_stack == s->stacks[STACK_A]) {
-					mylog( "Solve: rot + banking revrot\n");
-					move(s->dest_stack, ROTATE);
-                    rot_counter++;
-            	}
-			}
-            else //value is large
-            {
-                mylog( "Solve: push\n");
-                move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[1]);
-                if (s->dest_stack == s->stacks[STACK_B]) // largers stay on top, so temporarily go bottom
-                {
-					if (get_partition_count(s->dest_stack) > (size_t)2)
-                    {
-						mylog("Solve: rot\n");
-						move(s->dest_stack, ROTATE);
-                    	rot_counter++;
-					}
-                }
-            }
-            print_stacks(s);
-            mylog( "##(end round)##\n\n"); fflush(stderr);
-            i++;
-        }
-        while (--rot_counter >= 0) { 
-            mylog( "Solve: rot counter rot\n");
-            move(s->dest_stack,REV_ROTATE); // move bottoms
-			print_stacks(s);
-        }
-        dest_partitions[0] = NULL;
-        dest_partitions[1] = NULL;
+	    process_partition(s, top_partition, curr_partition, get_partition_size(curr_partition));
         j++;
     }
 	print_stacks(s);
@@ -169,9 +248,9 @@ void	solve(t_state *s)
 void	solver(t_state *s)
 {
 	if (s->nums < SMALL_NUMS)
-		s->passes = 10;
+		s->passes = PASSES;
 	else if (s->nums < LARGE_NUMS)
-		s->passes = 10;
+		s->passes = PASSES;
 	solve(s);
 	return ;
 }

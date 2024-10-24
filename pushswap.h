@@ -14,7 +14,8 @@
 # define GREY "\033[90m"
 # define LTGREY "\033[38;5;245m"
 # define RESET "\033[0m"
-
+# define PRINT_ON 1
+# define PRINT_OFF 0
 enum e_stacks
 {
 	STACK_A,
@@ -25,6 +26,7 @@ enum e_move_type{
     PUSH,
     ROTATE,
     REV_ROTATE,
+    SWAP,
     MOVE_COUNT
 };
 
@@ -55,6 +57,7 @@ void	create_destination_partitions(t_state *, t_partition_ptr (*)[2]);
 void    flip_curr_stack(t_state *);
 bool	is_done(t_state *);
 void    move(t_stack_ptr stack, enum e_move_type, ...);
+void    swap_both(t_state *);
 
 /* Program functions */
 // solver.c
@@ -70,17 +73,5 @@ void		mylog(const char *format, ...);
 // utils.c
 void	print_stacks(t_state *);
 
-// rev_rotates.c rotates.c pushes.c
-void	rev_rot_a(t_state *);
-void	rev_rot_b(t_state *);
-void	rev_rot_both(t_state *);
-void	rot_a(t_state *);
-void	rot_b(t_state *);
-void	rot_both(t_state *);
-void	swap_a(t_state *);
-void	swap_b(t_state *);
-void	swap_both(t_state *);
-void	push_a(t_state *);
-void	push_b(t_state *);
 
 #endif

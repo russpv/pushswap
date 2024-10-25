@@ -16,6 +16,7 @@
 # define RESET "\033[0m"
 # define PRINT_ON 1
 # define PRINT_OFF 0
+
 enum e_stacks
 {
 	STACK_A,
@@ -52,17 +53,22 @@ typedef struct s_state
 // state.c
 void    create_state(t_state **, char **, int);
 void    destroy_state(t_state *);
-bool	fill_stack_a(t_state *);
+bool	fill_stack_a(t_state *); // DELETE
 void	create_destination_partitions(t_state *, t_partition_ptr (*)[2]);
 void    flip_curr_stack(t_state *);
 bool	is_done(t_state *);
 void    move(t_stack_ptr stack, enum e_move_type, ...);
 void    swap_both(t_state *);
+void	rotate_both(t_state *);	
+void	rev_rotate_both(t_state *);
 
 /* Program functions */
+// greedy_sort.c
+bool	greedy_sort(t_state *s);
+
 // solver.c
 void	solver(t_state *);
-
+void	solve(t_state *);
 // sorted.c
 int		sorted(t_state *);
 

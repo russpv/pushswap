@@ -247,11 +247,10 @@ void	solve(t_state *s)
 
 	++s->curr_pass;
 	mylog( "\n########## PASS_%d ###\n", s->curr_pass);
-	//if (s->dest_stack == s->stacks[STACK_A] && get_partition_size(get_top_partition(s->curr_stack)) < SORT_STOP) {
 	if (s->curr_pass == PASSES)
     {
-        fprintf(stderr, "Doing insertion sort.\n");
-		insertion_sort(s);
+        fprintf(stderr, "Doing greedy sort.\n");
+		greedy_sort(s);
         return ;
 	}
 	if (is_sorted_asc(s->stacks[STACK_A]) && is_full(s->stacks[STACK_A])) {

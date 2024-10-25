@@ -51,6 +51,30 @@ t_stack_ptr	create_stack(const char id, const size_t size)
 	return (stack);
 }
 
+t_stack_ptr	copy_stack(t_stack_ptr src)
+{
+	t_stack_ptr s;
+	s = create_stack(get_stack_id(src), get_stack_size(src));
+	if (!s)
+		return (NULL);
+    size_t i;
+
+    i = SIZE_MAX;
+	while (++i < s->max_size)
+        s->nums[i] = src->nums[i];
+   	i = SIZE_MAX;	
+	while (src->idx[++i] != INIT_IDX_VALUE)
+		s->idx[i] = src->idx[i];
+	i = SIZE_MAX;
+	while (src->part_idx[++i] != INIT_IDX_VALUE)
+		s->part_idx[i] = src->part_idx[i];
+	i = SIZE_MAX;
+	while (++i < MAX_PARTITIONS)
+		s->partitions[i] = src->partitions[i];
+	s->partition_count = src->partition_count;
+	return (s);
+}
+
 void	destroy_stack(t_stack_ptr stack)
 {
 	int i;
@@ -286,3 +310,8 @@ long	get_stack_num(t_stack_ptr s, size_t idx)
 	return (s->nums[s->idx[idx]]);
 }
 
+/* Returns lower middle index for even size */
+int		get_middle_idx(t_stack_ptr s)
+{
+	return (get_stack_size(s) / 2);
+}

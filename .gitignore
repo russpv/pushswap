@@ -1,3 +1,4 @@
+*.swp
 libft/*.a
 *.ini
 push_swap_visualizer/

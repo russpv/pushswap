@@ -1,7 +1,7 @@
 NAME = push_swap
 OUTPUT = executable
 
-SOURCES = main.c solver.c \
+SOURCES = main.c solver.c s2.c \
 		  err.c \
 		  stack.c partition.c state.c 
           

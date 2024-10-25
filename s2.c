@@ -3,27 +3,38 @@
 // Some version of the greedy search
 // The only requirement is that the destination be in stack order
 
-// TODO
-int abs_min(int a, int b)
+static int abs_min(int a, int b)
 {
-    if (a < b)
+	int i;
+	int j;
+
+	if (a < 0)
+		i = -a;
+	else
+		i = a;
+	if (b < 0)
+		j = -b;
+	else
+		j = b;
+    if (i < j)
         return (a);
-    else if (b < a)
+    else if (j < i)
         return (b);
     else
         return (a);
 }
 
 /* Positive for rotations; negative for reverse rots */
-int get_depth(t_stack_ptr s, int idx)
+static int get_depth(t_stack_ptr s, int idx)
 {
-    if (idx < get_middle_idx(s))
+    if (idx < get_middle_idx(s)) // TODO
         return (idx);
     else 
         return (idx - (get_stack_size(s) - 1));
 }
 
-size_t  count_moves_to_sorted_position(t_stack_ptr s, long num, (*move))
+static size_t  count_moves_to_sorted_position(t_stack_ptr s, \
+		long num, enum e_move_type m)
 {
     int i;
     size_t counter;
@@ -32,11 +43,14 @@ size_t  count_moves_to_sorted_position(t_stack_ptr s, long num, (*move))
     i = 0;
     counter = 0;
     c = copy_stack(s);
-    push_stack(c, num, create_partition());
+	if (!c)
+		return (SIZE_MAX);
+    push_stack(c, num, create_partition(c));
     while (i < get_middle_idx(c))
     {
-        move(); //TODO
+        move(s, m);
         counter++;
+		i++;
         if (is_sorted_asc(c))
             break ;
     }
@@ -45,23 +59,22 @@ size_t  count_moves_to_sorted_position(t_stack_ptr s, long num, (*move))
 }
 
 /* Negative for rotations; positive for reverse rots */
-int get_target_depth(t_stack_ptr s, long num)
+static int get_target_depth(t_stack_ptr s, long num)
 {
     size_t rotates;
     size_t reverse_rotates;
     
-    rotates = 0;
-    reverse_rotates = 0;
-    rotates = count_moves_to_sorted_position(rotates, num, ROTATE);
-    reverse_rotates = count_moves_to_sorted_position(reverse_rotates, num, REVERSE);
+    rotates = count_moves_to_sorted_position(s, num, ROTATE);
+    reverse_rotates = count_moves_to_sorted_position(s, \
+			num, REV_ROTATE);
 
-    return (abs_min(rotates, reverse_rotates)); //TODO
+    return (abs_min(rotates, reverse_rotates));
 }
 
 /* Returns moves to rotate and push a number to sorted position; absolute value */
-int get_total_moves(t_state *s, int idx)
+static int get_total_moves(t_state *s, int idx)
 {
-    const long num = get_num(s->curr_stack, idx);
+    const long num = get_stack_num(s->curr_stack, idx);
     const int one = get_depth(s->curr_stack, idx);
     const int two = get_target_depth(s->dest_stack, num);
 
@@ -70,24 +83,25 @@ int get_total_moves(t_state *s, int idx)
     else if (one < 0 && two < 0)
         return (-one + -two + 1);
     else if (one < 0 && two >= 0)
-        return (one + two + 1 + min(-one, two));
+        return (one + two + 1 + abs_min(one, two));
     else if (one >= 0 && two < 0)
-        return (one + two + 1 + min(one, -two));
+        return (one + two + 1 + abs_min(one, two));
     else
         return (INT_MAX);
 }
 
 /* Loop each num, return minimum score idx */
-int find_cheapest_idx(t_state *s)
+static int find_cheapest_idx(t_state *s)
 {
     int minimum;
     int i;
+	int a;
 
     i = 0;
     minimum = INT_MAX;
-    while (i < get_stack_size(s->curr_stack))
+    while (i < (int)get_stack_size(s->curr_stack))
     {
-        a = get_total_moves(s->curr_stack, i);
+        a = get_total_moves(s, i);
         if (a < minimum)
             minimum = i;
         i++;
@@ -95,53 +109,58 @@ int find_cheapest_idx(t_state *s)
     return (minimum);
 }
 
-int find_dest_idx
-
 /*******/
 
 // If sign of depth opposite sign of target depth, then rotate both
 
-bool    do_cheapest_num(t_state *s)
+static bool    do_cheapest_num(t_state *s)
 {
     const int   src_idx = find_cheapest_idx(s);
-    const int   dest_idx = find_dest_idx(s, src_idx);
-    dest_moves = get();
-    src_moves = get();
-    // if same sign moves, do dual moves;
+    int	dest_moves = get_target_depth(s->dest_stack, get_stack_num(s->curr_stack, src_idx));
+    int	src_moves = get_depth(s->curr_stack, src_idx);
+
     while (dest_moves < 0 && src_moves < 0)
     {
-        move(REVERSE_BOTH);
+		rev_rotate_both(s);
         dest_moves++;
         src_moves++;
     }
     while (dest_moves > 0 && src_moves > 0)
     {
-        move(ROTATE_BOTH);
+        rotate_both(s);
         dest_moves--;
         src_moves--;
     }
     while (src_moves < 0)
     {
-        move(REVERSE);
+        move(s->curr_stack, REV_ROTATE);
         dest_moves++;
     }
     while (src_moves > 0)
     {
-        moves(ROTATE);
+        move(s->curr_stack, ROTATE);
         src_moves--;
     }
-    move(PUSH);
+    move(s->curr_stack, PUSH);
     while (dest_moves < 0)
     {
-        move(REVERSE);
+        move(s->dest_stack, REV_ROTATE);
         dest_moves++;
         // TODO check if push, or would this never happen
     }
     while (dest_moves > 0)
     {
-        move(ROTATE);
+        move(s->dest_stack, ROTATE);
         dest_moves--;
         //TODO check if push
     }
     return (true);
+}
+
+bool	greedy_sort(t_state *s)
+{
+	while (get_stack_size(s->curr_stack) > 0)
+		if (do_cheapest_num(s) == false)
+			return (false);
+	return (true);
 }

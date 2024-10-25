@@ -3,7 +3,7 @@
 
 #include "stack.h"
 
-#define MAX_PARTITIONS 16
+#define MAX_PARTITIONS 32
 #define INIT_IDX_VALUE -1
 #define INIT_NUM_VALUE LONG_MAX
 

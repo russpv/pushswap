@@ -29,8 +29,7 @@
 //dummy
 # define SMALL_NUMS 200
 # define LARGE_NUMS 600
-# define SORT_STOP 5
-# define PASSES 6
+# define PASSES 4
 
 // no matter the state, the current partition will be absolutely larger or 
 // smaller than whats on the dest stack.
@@ -59,9 +58,9 @@ void	insertion_sort(t_state *s)
         if (get_stack_size(a) >= 1)
         {
             fprintf(stderr, "stack size=_%zu\n", get_stack_size(a)); fflush(stderr);
-			if (num > peek_bottom(a))
+			if (num > peek_bottom(a)) /* new maximum */
 				rotates = 1;
-			else if (num < peek_stack(a))
+			else if (num < peek_stack(a)) /* new min */
 			   ;
 			else	
 			{
@@ -100,10 +99,13 @@ void	insertion_sort(t_state *s)
             }
         }
         move(a, PUSH, pop_stack(b), partition);
-		if (rev_rotates == 0 && rotates == 1) /* new max num */
+		if (rev_rotates == 0 && rotates == 1) /* new max num */ 
+        {
+            mylog("new maximum\n");
 			move(a, ROTATE);
+        }
         // check if the next num should be pushed on the way back
-        if (get_stack_size(a) == 2)
+        else if (get_stack_size(a) == 2)
 		{
 			if (rotates > 0)
 			{
@@ -111,7 +113,7 @@ void	insertion_sort(t_state *s)
 				move(a, ROTATE);
 			}
 		}
-		if (do_rotates == true)
+        else if (do_rotates == true)
 		{
             while (rot_counter-- > 0)
 			{
@@ -187,7 +189,7 @@ void    process_partition(t_state *s, t_partition_ptr top_partition, t_partition
             if (peek_next_stack(s->curr_stack) <= s->pivot && get_stack_size(s->curr_stack) > 2)
                 swap_stack_if_needed(s);
             mylog( "Solve: %ld below median %ld\n", peek_stack(s->curr_stack), s->pivot);
-            mylog( "Solve: push\n");
+            mylog( "Solve: push lower\n");
             move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[0]);
             print_stacks(s);
             // to STACKB, largers stay on top
@@ -209,7 +211,7 @@ void    process_partition(t_state *s, t_partition_ptr top_partition, t_partition
         {
             if (peek_next_stack(s->curr_stack) > s->pivot && get_stack_size(s->curr_stack) > 2)
                 swap_stack_if_needed(s);
-            mylog( "Solve: push\n");
+            mylog( "Solve: push larger\n");
             move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[1]);
             if (s->dest_stack == s->stacks[STACK_B]) // largers stay on top, so temporarily go bottom
             {

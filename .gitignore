@@ -2,7 +2,6 @@
 libft/libft.a
 libft.a
 *.ini
-push_swap_visualizer/
 *.o
 push_swap
 checker_linux

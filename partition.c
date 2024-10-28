@@ -32,6 +32,21 @@ t_partition_ptr	create_partition(t_stack_ptr stack)
 	return (partition);
 }
 
+t_partition_ptr copy_partition(t_partition_ptr src, t_stack_ptr dest_stack)
+{
+    t_partition_ptr partition = malloc(sizeof(struct s_partition));
+    if (partition)
+    {
+        partition->id = src->id;
+        partition->size = src->size;
+        partition->stack = dest_stack;
+        dest_stack->partitions[partition->id] = partition;
+        dest_stack->partition_count++;
+        mydebug("Log: copied part, id:%d stack:%d\n", partition->id, dest_stack->id);
+    }
+    return (partition);
+}
+
 void    destroy_partition(t_partition_ptr *p)
 {
     free(*p);

@@ -16,8 +16,10 @@ void	mydebug(const char *format, ...)
 void	print_stack(t_stack_ptr stack)
 {
 	const size_t size = stack->size;
-	if (0 == size)
+	if (0 == size) {
+        mydebug(" empty stack, nothing to print.\n");
 		return ;
+    }
 	for (size_t j = 0; j < size; j++)
 		mydebug(" %ld(%d)", stack->nums[stack->idx[j]], stack->part_idx[j]);
 	mydebug("|");
@@ -53,12 +55,12 @@ t_stack_ptr	create_stack(const char id, const size_t size)
 
 t_stack_ptr	copy_stack(t_stack_ptr src)
 {
-	t_stack_ptr s;
-	s = create_stack(get_stack_id(src), get_stack_size(src));
+	t_stack_ptr s = create_stack(get_stack_id(src), get_stack_size(src));
 	if (!s)
 		return (NULL);
     size_t i;
 
+    s->size = src->size;
     i = SIZE_MAX;
 	while (++i < s->max_size)
         s->nums[i] = src->nums[i];
@@ -69,9 +71,10 @@ t_stack_ptr	copy_stack(t_stack_ptr src)
 	while (src->part_idx[++i] != INIT_IDX_VALUE)
 		s->part_idx[i] = src->part_idx[i];
 	i = SIZE_MAX;
-	while (++i < MAX_PARTITIONS)
-		s->partitions[i] = src->partitions[i];
-	s->partition_count = src->partition_count;
+	while (++i < get_partition_count(src))
+        copy_partition(src->partitions[i], s);
+    mydebug("Stack copied:\n");
+    print_stack(s);
 	return (s);
 }
 

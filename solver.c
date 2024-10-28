@@ -53,7 +53,7 @@ void	insertion_sort(t_state *s)
         int rev_counter = 0;
 
         if (peek_next_stack(b) > peek_stack(b)) /* swap */
-            move(b, SWAP);
+            move(b, SWAP, 0, NULL, PRINT_ON);
 		const long num = peek_stack(b);
         if (get_stack_size(a) >= 1)
         {
@@ -83,7 +83,7 @@ void	insertion_sort(t_state *s)
 			fprintf(stderr, "Rotating\n");
             while (rotates-- > 0)
             {
-                move(a, ROTATE);
+                move(a, ROTATE, 0, NULL, PRINT_ON);
                 rot_counter++;
             }
         }
@@ -94,15 +94,15 @@ void	insertion_sort(t_state *s)
 			rev_counter = 1; /* have to reverse the just-pushed num */
             while (rev_rotates-- > 0)
             {
-                move(a, REV_ROTATE);
+                move(a, REV_ROTATE, 0, NULL, PRINT_ON);
                 rev_counter++;
             }
         }
-        move(a, PUSH, pop_stack(b), partition);
+        move(a, PUSH, pop_stack(b), partition, PRINT_ON);
 		if (rev_rotates == 0 && rotates == 1) /* new max num */ 
         {
             mylog("new maximum\n");
-			move(a, ROTATE);
+			move(a, ROTATE, 0, NULL, PRINT_ON);
         }
         // check if the next num should be pushed on the way back
         else if (get_stack_size(a) == 2)
@@ -110,25 +110,25 @@ void	insertion_sort(t_state *s)
 			if (rotates > 0)
 			{
 				mylog("Rotating\n");
-				move(a, ROTATE);
+				move(a, ROTATE, 0, NULL, PRINT_ON);
 			}
 		}
         else if (do_rotates == true)
 		{
             while (rot_counter-- > 0)
 			{
-                move(a, REV_ROTATE); 
+                move(a, REV_ROTATE, 0, NULL, PRINT_ON); 
 				if (peek_stack(b) < peek_stack(a) && peek_stack(b) > peek_bottom(a))
-					move(a, PUSH, pop_stack(b), partition);
+					move(a, PUSH, pop_stack(b), partition, 0, NULL, PRINT_ON);
 			}
 		}
         else if (do_rev_rotates == true)
 		{
             while (rev_counter-- > 0)
 			{
-                move(a, ROTATE);
+                move(a, ROTATE, 0, NULL, PRINT_ON);
 				if (peek_stack(b) < peek_stack(a) && peek_stack(b) > peek_bottom(a))
-					move(a, PUSH, pop_stack(b), partition);
+					move(a, PUSH, pop_stack(b), partition, PRINT_ON);
 			}
 		}
         i++;
@@ -190,20 +190,20 @@ void    process_partition(t_state *s, t_partition_ptr top_partition, t_partition
                 swap_stack_if_needed(s);
             mylog( "Solve: %ld below median %ld\n", peek_stack(s->curr_stack), s->pivot);
             mylog( "Solve: push lower\n");
-            move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[0]);
+            move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[0], PRINT_ON);
             print_stacks(s);
             // to STACKB, largers stay on top
             if (s->dest_stack == s->stacks[STACK_B]) {
                 if (partition == top_partition) /* if first partition sorting, only rotate */
                 {
                     mylog( "Solve: rot\n");
-                    move(s->dest_stack, ROTATE); /* TODO: wasted move if all same grouping on stack */
+                    move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON); /* TODO: wasted move if all same grouping on stack */
                 } /* if not top partition, don't rotate smallers */
             }
             // back to STACKA, smallers go to bottom temporarily
             else if (s->dest_stack == s->stacks[STACK_A] && partition != top_partition) { /* never an empty stack, except first partition sorting */
                 mylog( "Solve: rot + banking revrot\n");
-                move(s->dest_stack, ROTATE);
+                move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
                 rot_counter++;
             }
         }
@@ -212,20 +212,20 @@ void    process_partition(t_state *s, t_partition_ptr top_partition, t_partition
             if (peek_next_stack(s->curr_stack) > s->pivot && get_stack_size(s->curr_stack) > 2)
                 swap_stack_if_needed(s);
             mylog( "Solve: push larger\n");
-            move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[1]);
+            move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[1], PRINT_ON);
             if (s->dest_stack == s->stacks[STACK_B]) // largers stay on top, so temporarily go bottom
             {
                 if (partition != top_partition) /* if not top partition, rotate largers and reverse rotate later */
                 {
                     mylog("Solve: rot + reverse later\n");
-                    move(s->dest_stack, ROTATE);
+                    move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
                     rot_counter++;
                 } /* if top partition, don't rotate */
             }
             else if (s->dest_stack == s->stacks[STACK_A] &&  partition == top_partition)
             {
                 mylog("Solve: rot\n");
-                move(s->dest_stack, ROTATE);
+                move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
             }
         }
         print_stacks(s);
@@ -234,7 +234,7 @@ void    process_partition(t_state *s, t_partition_ptr top_partition, t_partition
     }
     while (rot_counter-- > 0) { 
         mylog( "Solve: rot counter rot\n");
-        move(s->dest_stack,REV_ROTATE); // move bottoms
+        move(s->dest_stack, REV_ROTATE, 0, NULL, PRINT_ON); // move bottoms
         print_stacks(s);
     }
 }
@@ -250,7 +250,9 @@ void	solve(t_state *s)
 	if (s->curr_pass == PASSES)
     {
         fprintf(stderr, "Doing greedy sort.\n");
-		greedy_sort(s);
+		if (greedy_sort(s) == false)
+            err("Greedy sort failed.\n", s);
+        
         return ;
 	}
 	if (is_sorted_asc(s->stacks[STACK_A]) && is_full(s->stacks[STACK_A])) {

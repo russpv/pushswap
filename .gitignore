@@ -1,5 +1,6 @@
 *.swp
-libft/*.a
+libft/libft.a
+libft.a
 *.ini
 push_swap_visualizer/
 *.o

@@ -23,9 +23,11 @@ t_partition_ptr	create_partition(t_stack_ptr stack)
 		partition->id = _get_next_free_partition_id(stack);
 		partition->size = 0;
 		partition->stack = stack;
-		if (-1 == partition->id)
+		if (-1 == partition->id) {
+            mydebug("\033[31mLog: partition create failure\n\033[0m");
 			return (free(partition), NULL);
-		stack->partitions[partition->id] = partition;
+        }	
+        stack->partitions[partition->id] = partition;
         stack->partition_count++;
 	}
 	mydebug("Log: Init'd part, id:%d stack:%d\n", partition->id, stack->id);

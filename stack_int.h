@@ -15,6 +15,9 @@ struct	s_stack
 	char	    		id;
 	size_t				max_size;
 	size_t				size;
+    long                min;
+    long                max;
+    size_t              last_update_size;
 	
 	long				*nums; // actual integers, not modified
 	int					*idx;  // order index of nums, ops modify this

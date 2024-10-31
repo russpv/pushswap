@@ -11,6 +11,7 @@
 # include <stdarg.h>
 
 # define STACKS 2
+# define RED "\033[31m"
 # define GREY "\033[90m"
 # define LTGREY "\033[38;5;245m"
 # define RESET "\033[0m"
@@ -48,6 +49,10 @@ typedef struct s_state
 	int		passes;	/* algo */
 	int		curr_pass;
 	int		print_move; /* output */
+
+    int     target_depth;
+    int     moves;
+    int     depth; 
 }	t_state;
 
 // state.c

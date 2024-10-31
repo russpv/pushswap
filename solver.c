@@ -29,7 +29,7 @@
 //dummy
 # define SMALL_NUMS 200
 # define LARGE_NUMS 600
-# define PASSES 4
+# define PASSES 2
 
 // no matter the state, the current partition will be absolutely larger or 
 // smaller than whats on the dest stack.
@@ -38,7 +38,7 @@
 // I want this to run only B>A, the final pass.
 // can write this per partition or per stack. might as well per stack.
 /* This is run only on Stack B */
-void	insertion_sort(t_state *s)
+bool	insertion_sort(t_state *s)
 {
     
 	int i = 0;
@@ -134,6 +134,7 @@ void	insertion_sort(t_state *s)
         i++;
 	}
 	print_stacks(s);
+    return (true);
 }	
 
 void    swap_both_if_needed(t_state *s)

@@ -159,7 +159,10 @@ void    rev_rotate(t_stack_ptr s, va_list args)
     va_arg(args, t_partition_ptr);
     const int   print = va_arg(args, int);
     if (rev_rotate_stack(s) == false)
+    {
+        mydebug("Invalid move, no bueno...\n");
         exit(1);
+    }
     if (print == PRINT_OFF)
         return ;
     write(1, "rr", 2);

@@ -24,13 +24,13 @@ t_partition_ptr	create_partition(t_stack_ptr stack)
 		partition->size = 0;
 		partition->stack = stack;
 		if (-1 == partition->id) {
-            mydebug("\033[31mLog: partition create failure\n\033[0m");
+            mydebug("\033[31mERR partition create failure\n\033[0m");
 			return (free(partition), NULL);
         }	
         stack->partitions[partition->id] = partition;
         stack->partition_count++;
 	}
-	mydebug("Log: Init'd part, id:%d stack:%d\n", partition->id, stack->id);
+	mydebug("---- (create_part): Init'd part, id:%d stack:%d\n", partition->id, stack->id);
 	return (partition);
 }
 
@@ -44,7 +44,7 @@ t_partition_ptr copy_partition(t_partition_ptr src, t_stack_ptr dest_stack)
         partition->stack = dest_stack;
         dest_stack->partitions[partition->id] = partition;
         dest_stack->partition_count++;
-        mydebug("Log: copied part, id:%d stack:%d\n", partition->id, dest_stack->id);
+        mydebug("---- (copy_part): copied part, id:%d stack:%d\n", partition->id, dest_stack->id);
     }
     return (partition);
 }
@@ -66,7 +66,7 @@ bool	fill_partition(t_stack_ptr stack,
 	if (!stack || !partition || begin < 0 || end < begin || end >= (int)stack->size)
 		return (false);
 	i = begin;
-	mydebug( "Log: Init partition fill id:%d\n", partition->id);
+	mydebug( "---- (fill_part): Init partition fill id:%d\n", partition->id);
 	while (i <= end)
 	{
 		stack->part_idx[i] = partition->id;
@@ -138,7 +138,7 @@ int		get_median(long *nums, int *idx, size_t size)
 		mydebug( "Log: median:%ld\n", arr[size / 2]);
 		return (arr[size / 2]);
 	}
-	mydebug( "Log: median:%ld\n", arr[size / 2 -1 ]);
+	mydebug( "---- (get_median): median:%ld\n", arr[size / 2 -1 ]);
 	return (arr[size / 2 - 1]);
 }
 
@@ -159,15 +159,15 @@ t_partition_ptr get_top_partition(t_stack_ptr stack)
 {
 	if (NULL == stack)
 	{
-		mydebug( "hey stack is NULLLL"); fflush(stderr);
+		mydebug( "ERR hey stack is NULLLL"); fflush(stderr);
 		return (NULL);
 	}
 	const int part_id = stack->part_idx[0];
 	int i;
 	i = -1;
 	if (INIT_IDX_VALUE == part_id)
-		mydebug( "bad top num part_id\n");
-	mydebug( "Log: top num part_id:%d\n", part_id); fflush(stderr);
+		mydebug( "ERR bad top num part_id\n");
+	//mydebug( "---- (get_top_partition): top num part_id:%d\n", part_id); fflush(stderr);
 	while (++i < MAX_PARTITIONS)
 		if (stack->partitions[i] && part_id == stack->partitions[i]->id)
 			return (stack->partitions[i]);

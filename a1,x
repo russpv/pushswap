@@ -79,9 +79,9 @@ t_stack_ptr	copy_stack(t_stack_ptr src)
 	i = SIZE_MAX;
 	while (++i < get_partition_count(src))
         copy_partition(src->partitions[i], s);
-    mydebug("---- (copy_stack) -- (size_%zu, max_%zu, parts_%zu): ", get_stack_size(s), get_stack_max_size(s),\
+    mydebug("Stack copied (size_%zu, max_%zu, parts_%zu): ", get_stack_size(s), get_stack_max_size(s),\
             get_partition_count(s));
-    //print_stack(s); mydebug("\n");
+    print_stack(s); mydebug("\n");
 	return (s);
 }
 
@@ -280,64 +280,36 @@ bool    is_sorted_asc(t_stack_ptr s)
 	return (true);
 }
 
-/* Written assuming a single disjoint 'drop' in the sequence */
 bool    is_sorted_asc_rotationally(t_stack_ptr s)
 {
-    int drops = 0;
-    int i = -1;
-
     if (!s)
         return (false);
-    while (++i < (int)s->size)
-        if (s->nums[s->idx[i]] > s->nums[s->idx[(i + 1) % s->size]])
-            drops++;
-    if (drops > 1) { //TODO delete this
-        mydebug("---- (is sorted rotationally) -- not sorted.\n");
-        return (false);
-    }
-    else
-    {
-        mydebug("---- (is sorted rotationally) -- SORTED!!\n");
+    if (get_stack_size(s) == 1)
         return (true);
-    }
-    //return (drops <= 1);
-}
-
-/* Returns index (or # rotates) of position that maintains ascending sort
- * order. Assumes sorted stack. Binary search. */
-int get_insert_position(t_stack_ptr s, long num)
-{
-    int high;
-    int low;
-    int mid;
-
-    high = s->size - 1;
-    low = 0;
-    if (s->size == 0 || s->size == 1)
-        return (0);
-    while (low < high)
-    {
-        mid = low + (high - low) / 2; 
-        /* left is sorted (right may also be)*/
-        if (s->nums[s->idx[low]] <= s->nums[s->idx[mid]])
+    else if (get_stack_size(s) == 2)
+        return (is_sorted_asc(s));
+    else if (is_sorted_asc(s) == true)
+        return (true);
+    size_t i = 0;
+    const size_t size = get_stack_size(s);
+//    mydebug("is sorted rotationally -- starting loop...(size:%zu)\n", size);
+    while (++i < size)
+        if (!(get_stack_num(s, i - 1) < get_stack_num(s, i)))
+            break;
+    //const long max = get_stack_num(s, i - 1);
+//    mydebug("is sorted rotationally -- done first loop idx:%zu\n", i);
+    while (++i < size)
+        if (!(get_stack_num(s, i - 1) < get_stack_num(s, i)))
+            break;
+    if (i == size) {
+        if (peek_bottom(s) < peek_stack(s)) // must be continuous
         {
-            if (((num > s->nums[s->idx[mid]]) && \
-                        (s->nums[s->idx[mid]] < s->nums[s->idx[high]])) || 
-                     ((num < s->nums[s->idx[low]]) && \
-                    !(s->nums[s->idx[mid]] < s->nums[s->idx[high]])) )
-                low = mid + 1; /* look right */
-            else
-                high = mid - 1; /* look left */
-        }
-        else /* right is sorted */
-        {
-            if ((num < s->nums[s->idx[mid]]) || (num > s->nums[s->idx[low]])) 
-                high = mid - 1; /* look left */
-            else
-                low = mid + 1; /* look right */
+            mydebug("---- (is sorted rotationally) -- SORTED!!\n");
+            return (true); 
         }
     }
-    return (high);
+    mydebug("---- (is sorted rotationally) -- not sorted.\n");
+    return (false);
 }
 
 /* Returns number of rotates or reverse rotates */
@@ -359,6 +331,8 @@ int    get_moves_back_to_head(t_stack_ptr s)
         return (i);
     else
         return (-1 * ((int)size - i)); /* inclusive */
+
+    
 }
 
 void print_stack_id(t_stack_ptr stack)

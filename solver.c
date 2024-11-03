@@ -184,11 +184,11 @@ void    process_partition(t_state *s, t_partition_ptr top_partition, t_partition
                 get_partition_id(partition),
                 get_partition_count(s->curr_stack));
         print_stacks(s); 
-        swap_both_if_needed(s);
+        //swap_both_if_needed(s);
         if (peek_stack(s->curr_stack) <= s->pivot)
         {
             if (peek_next_stack(s->curr_stack) <= s->pivot && get_stack_size(s->curr_stack) > 2)
-                swap_stack_if_needed(s);
+                //swap_stack_if_needed(s);
             mylog( "Solve: %ld below median %ld\n", peek_stack(s->curr_stack), s->pivot);
             mylog( "Solve: push lower\n");
             move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[0], PRINT_ON);
@@ -211,7 +211,7 @@ void    process_partition(t_state *s, t_partition_ptr top_partition, t_partition
         else //value is large
         {
             if (peek_next_stack(s->curr_stack) > s->pivot && get_stack_size(s->curr_stack) > 2)
-                swap_stack_if_needed(s);
+                //swap_stack_if_needed(s);
             mylog( "Solve: push larger\n");
             move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[1], PRINT_ON);
             if (s->dest_stack == s->stacks[STACK_B]) // largers stay on top, so temporarily go bottom

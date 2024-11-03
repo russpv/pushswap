@@ -55,6 +55,7 @@ size_t      get_partition_count(t_stack_ptr);
 int         get_moves_back_to_head(t_stack_ptr);
 unsigned long get_entropy(t_stack_ptr, t_partition_ptr);
 int         get_stack_idx_at_depth(t_stack_ptr, int);
+int         get_insert_position(t_stack_ptr, long);
 
 /* Stack->Partition methods */
 

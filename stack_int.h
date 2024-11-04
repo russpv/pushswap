@@ -10,6 +10,9 @@
 # define GREY "\033[90m"
 # define LTGREY "\033[38;5;245m"
 # define RESET "\033[0m"
+
+# define DEBUGGING true
+
 struct	s_stack
 {
 	char	    		id;

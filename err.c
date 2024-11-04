@@ -10,14 +10,19 @@ void	err(char *msg, t_state *state)
 
 void	mylog(const char *format, ...)
 {
+	int	original_stdout;
+		va_list args;
+
 	if (LOGGING == true)
 	{
-		fprintf(stderr, "%s", LTGREY);
-		va_list	args;
+		original_stdout = dup(STDOUT_FILENO);
+		dup2(STDERR_FILENO, STDOUT_FILENO);
+		ft_printf("%s", LTGREY);
 		va_start(args, format);
-		vfprintf(stderr, format, args);
+		ft_printf(format, args);
 		va_end(args);
-		fprintf(stderr, "%s", RESET);
-	}	
+		ft_printf("%s", RESET);
+		dup2(original_stdout, STDOUT_FILENO);
+		close(original_stdout);
+	}
 }
-

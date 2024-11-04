@@ -1,4 +1,3 @@
-#include "pushswap.h"
 
 /* Moves top number on a to stack b */
 void	push_b(t_state *s)

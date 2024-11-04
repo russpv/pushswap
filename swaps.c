@@ -1,4 +1,3 @@
-#include "pushswap.h"
 
 /* These are swap moves */
 /* top numbers switch places */

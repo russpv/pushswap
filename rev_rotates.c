@@ -1,4 +1,3 @@
-#include "pushswap.h"
 
 
 void	rev_rot_both(t_state *s)

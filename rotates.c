@@ -1,4 +1,3 @@
-#include "pushswap.h"
 
 void	rot_both(t_state *s)
 {

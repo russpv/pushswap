@@ -13,8 +13,8 @@
 /* Check args are all numeric */
 static int	_parse_args(int argc, char **argv)
 {
-	int i;
-	size_t j;
+	int		i;
+	size_t	j;
 
 	i = 0;
 	while (++i < argc)
@@ -27,20 +27,10 @@ static int	_parse_args(int argc, char **argv)
 	return (SUCCESS);
 }
 
-static void	_solve(t_state *state)
-{
-	fill_stack_a(state);
-	print_stacks(state);
-	mylog( "Main: ready to solve\n");
-	if (is_done(state) == false)
-		solver(state);
-	return ;
-}
-
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_state	*state;
-	
+
 	state = NULL;
 	if (argc < 2)
 	{
@@ -53,9 +43,7 @@ int main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	create_state(&state, argv, argc);
-	//print_arr(state->a, state->a_size);
-	_solve(state);
-	//print_stacks(state);
+	solver(state);
 	destroy_state(state);
 	return (EXIT_SUCCESS);
 }

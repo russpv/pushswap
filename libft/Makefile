@@ -5,7 +5,9 @@ SOURCES =   ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c \
     ft_isascii.c ft_isdigit.c ft_isprint.c ft_isspace.c ft_itoa.c \
     ft_itoa_base.c ft_memccpy_extra.c ft_memchr.c ft_memcmp.c \
     ft_memcpy.c ft_memdup.c ft_memjoin.c ft_memmove.c ft_memset.c \
-    ft_printf.c ft_putchar.c ft_putchar_fd.c \
+    ft_printf.c ft_vprintf.c ft_putchar.c ft_putchar_fd.c \
+			printf_flags.c printf_flags2.c printf_formats.c printf_formats2.c \
+			printf_utils.c printf_utils2.c \
     ft_putchar_utf_extra.c ft_putendl_fd.c ft_putendl_extra.c \
     ft_putmem.c ft_putnbr.c ft_putnbr_fd.c \
     ft_putstr_fd.c ft_putstr_extra.c ft_split.c \
@@ -13,8 +15,8 @@ SOURCES =   ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c \
     ft_strlcat.c ft_strlcpy.c ft_strmapi.c ft_strncat_extra.c \
     ft_strncmp.c ft_strncpy_extra.c ft_strnlen_extra.c ft_strnstr.c \
     ft_strrchr.c ft_strscpy_extra.c ft_strtrim.c ft_substr.c \
-    ft_tolower.c ft_toupper.c flags.c flags2.c formats.c \
-    utils.c utils2.c ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c \
+    ft_tolower.c ft_toupper.c  \
+    ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c \
     ft_lstclear_bonus.c ft_lstdelone_bonus.c ft_lstiter_bonus.c \
     ft_lstlast_bonus.c ft_lstmap_bonus.c ft_lstnew_bonus.c \
     ft_lstsize_bonus.c ft_strlen.c

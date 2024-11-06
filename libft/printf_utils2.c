@@ -23,8 +23,7 @@ unsigned int	putchar_with_return(unsigned int ch)
 ** s1: must be heap string
 ** s2: must be heap string
 */
-char	*safe_mem_join(const char *s1, const char *s2, size_t len1, \
-		size_t len2)
+char	*safe_mem_join(const char *s1, const char *s2, size_t len1, size_t len2)
 {
 	char	*res;
 
@@ -63,7 +62,7 @@ char	*to_upper(char *s)
 	return (s);
 }
 
-/* Checks for specifier 
+/* Checks for specifier
  * If char matches in any of set.
  */
 int	in_set(const char *s, const char *set)
@@ -73,5 +72,23 @@ int	in_set(const char *s, const char *set)
 	while (*set)
 		if (*s == *set++)
 			return (TRUE);
+	return (FALSE);
+}
+
+/* Checks for two-digit specifier
+ * If char matches in any of set.
+ */
+int	in_set_twodig(const char *s, const char *set)
+{
+	if (!*s || !*set)
+		return (FALSE);
+	if (ft_strlen(s) < 2)
+		return (FALSE);
+	while (*set)
+	{
+		if (0 == ft_strncmp(s, set, 2))
+			return (TRUE);
+		set += 2;
+	}
 	return (FALSE);
 }

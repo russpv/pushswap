@@ -1,5 +1,5 @@
-#ifndef PUSH_SWAP_H
-# define PUSH_SWAP_H
+#ifndef PUSHSWAP_H
+# define PUSHSWAP_H
 
 # include "libft/libft.h"
 # include "stack.h"
@@ -35,7 +35,7 @@ enum			e_move_type
 	MOVE_COUNT
 };
 
-typedef void	(*t_move)(t_stack_ptr, va_list);
+typedef void	(*t_move)(t_stack_ptr a, va_list b);
 
 /* State data type */
 
@@ -45,53 +45,66 @@ typedef struct s_state
 	t_stack_ptr	curr_stack;
 	t_stack_ptr	dest_stack;
 
-	char **argv; /* args */
+	char		**argv;
 	size_t		nums;
 
 	long		pivot;
-	int passes; /* algo */
+	int			passes;
 	int			curr_pass;
-	int print_move; /* output */
+	int			print_move;
 
 	int			target_depth;
 	int			moves;
 	int			depth;
 
-	int			tmp;
+	long		tmp;
+	int			tmp_i;
 	int			tmp_moves;
 	int			tmp_depth;
 	int			tmp_t_depth;
 }				t_state;
 
 // state.c
-void			create_state(t_state **, char **, int);
-void			destroy_state(t_state *);
-bool	fill_stack_a(t_state *); // DELETE
-void			create_destination_partitions(t_state *,
-					t_partition_ptr (*)[2]);
-void			flip_curr_stack(t_state *);
-bool			is_done(t_state *);
+void			create_state(t_state **a, char **b, int c);
+void			destroy_state(t_state *a);
+bool			fill_stack_a(t_state *a);
+void			create_destination_partitions(t_state *a,
+					t_partition_ptr (*b)[2]);
+void			flip_curr_stack(t_state *a);
+bool			is_done(t_state *a);
 
-void			move(t_stack_ptr stack, enum e_move_type, ...);
-void			swap_both(t_state *);
-void			rotate_both(t_state *);
-void			rev_rotate_both(t_state *);
+void			move(t_stack_ptr a, enum e_move_type b, ...);
+
+void			swap_both(t_state *a);
+void			rotate_both(t_state *a);
+void			rev_rotate_both(t_state *a);
+
+void			print_stacks(t_state *a);
+void			print_stack_name(t_stack_ptr a);
 
 /* Program functions */
+
 // greedy_sort.c
-bool			greedy_sort(t_state *s);
+bool			greedy_sort(t_state *a);
+long			distance(long a, long b);
+int				find_alts(t_state *a, int b);
+int				get_total_moves(t_state *a, int b);
+int				find_cheapest_idx(t_state *a);
+int				get_moves(const int a, const int b);
+
+long			myabs(long a);
+int				abs_min(int a, int b);
+int				abs_max(int a, int b);
 
 // solver.c
-void			solver(t_state *);
-void			solve(t_state *);
-// sorted.c
-int				sorted(t_state *);
+void			solver(t_state *a);
+
+// quicksort.c
+void			quicksort_partition(t_state *a, t_partition_ptr b,
+					t_partition_ptr c, size_t d);
 
 // err.c
-void			err(char *, t_state *);
-void			mylog(const char *format, ...);
-
-// utils.c
-void			print_stacks(t_state *);
+void			err(char *a, t_state *b);
+void			mylog(const char *a, ...);
 
 #endif

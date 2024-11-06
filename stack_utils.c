@@ -2,16 +2,16 @@
 
 void	mydebug(const char *format, ...)
 {
-	int	original_stdout;
-		va_list args;
+	int		original_stdout;
+	va_list	args;
 
-	if (DEBUGGING == true)
+	if (true == DEBUGGING)
 	{
 		original_stdout = dup(STDOUT_FILENO);
 		dup2(STDERR_FILENO, STDOUT_FILENO);
 		ft_printf("%s", GREY);
 		va_start(args, format);
-		ft_printf(format, args);
+		ft_vprintf(format, args);
 		va_end(args);
 		ft_printf("%s", RESET);
 		dup2(original_stdout, STDOUT_FILENO);
@@ -21,18 +21,22 @@ void	mydebug(const char *format, ...)
 
 void	print_stack(t_stack_ptr stack)
 {
-	const size_t size = stack->size;
-	if (0 == size) {
-        mydebug(" empty stack, nothing to print.\n");
+	const size_t	size = stack->size;
+	size_t			i;
+
+	if (0 == size)
+	{
+		mydebug(" empty stack, nothing to print.\n");
 		return ;
-    }
-	for (size_t j = 0; j < size; j++)
-		mydebug(" %ld(%d)", stack->nums[stack->idx[j]], stack->part_idx[j]);
-	mydebug("|");
+	}
+	i = -1;
+	while (++i < size)
+		mydebug(" %ld(%d)", stack->nums[stack->idx[i]], stack->part_idx[i]);
+	mydebug("|\n");
 }
 
-void print_stack_id(t_stack_ptr stack)
+void	print_stack_id(t_stack_ptr stack)
 {
-    write(1, (const char*)&stack->id, 1);
-    write(1, "\n", 1);
+	write(1, (const char *)&stack->id, 1);
+	write(1, "\n", 1);
 }

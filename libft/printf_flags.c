@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-/* Applies flags for STR and CHR
+/* Applies flags to string for STR and CHR
  * String:
  * - NULL is "(null)" unless minprec truncates,
 	any minwidth prints "(null)" TODO: doublecheck
@@ -48,15 +48,14 @@ static inline char	*_do_flags_cs(char *r, t_spec *s, t_types typ, void *val)
 	return (r);
 }
 
-/* Apply flags for UINT/INT/HEX/PTR */
+/* Apply flags to string for UINT/INT/HEX/PTR */
 static inline char	*_do_flags_hipu(char *r, t_spec *s)
 {
 	if (s->mpflg)
 		r = apply_minprecision_num(r, s);
 	if (!r)
 		return (NULL);
-	s->len = ft_strlen(r) + s->leadflg + s->signflg
-		* ft_strlen(s->sch);
+	s->len = ft_strlen(r) + s->leadflg + s->signflg * ft_strlen(s->sch);
 	if (s->signflg && (s->minprec || s->pch != '0'))
 	{
 		s->signflg = FALSE;
@@ -97,7 +96,7 @@ static inline char	*_apply_0x_nil(char *r)
 }
 
 /* Sets negative sign char and flag for printing INT
-** 'Long long' container would be excessive; 
+** 'Long long' container would be excessive;
 ** va_arg() expects int only
 */
 static void	_handle_neg(unsigned long long *value, void *val, t_spec *s)
@@ -122,9 +121,10 @@ static void	_handle_neg(unsigned long long *value, void *val, t_spec *s)
 }
 
 /* Switchboard for handling flags by arg specifier
-** Returns heap string
-** HEX, PTR, UINT are positive-only
+** Builds and returns heap string (for printing downstream)
+** HEX, PTR, UINT, SIZET are positive-only
 ** va_arg() expects unsigned long
+** Pray that va_arg() consistently promotes types per here for your arch
 */
 char	*type_switch(void *val, t_types typ, t_spec *specs)
 {
@@ -136,15 +136,17 @@ char	*type_switch(void *val, t_types typ, t_spec *specs)
 		res = (char *)val;
 	if (typ == CHR || typ == STR)
 		res = _do_flags_cs(res, specs, typ, val);
-	if (typ == INT)
+	if (typ == INT || typ == LONG)
 		_handle_neg(&value, val, specs);
-	if (typ == HEX || typ == PTR || typ == UINT)
+	if (typ == HEX || typ == PTR || typ == UINT || typ == SIZET)
 		value = *(unsigned long *)val;
-	if (typ == HEX || typ == INT || typ == PTR || typ == UINT)
+	if (typ == HEX || typ == INT || typ == PTR || typ == UINT || typ == SIZET
+		|| typ == LONG)
 		res = ft_itoa_base(value, specs->base);
 	if (typ == PTR)
 		res = _apply_0x_nil(res);
-	if (typ == HEX || typ == INT || typ == PTR || typ == UINT)
+	if (typ == HEX || typ == INT || typ == PTR || typ == UINT || typ == SIZET
+		|| typ == LONG)
 		res = _do_flags_hipu(res, specs);
 	if (!res)
 		return (NULL);

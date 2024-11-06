@@ -15,6 +15,7 @@
 /* STRNCMP
 ** Returns diff betw values of the first pair of differing bytes
 ** (as unsigned char) of s1 - s2, comparing no more than n bytes
+** e.g. if (0 == ft_strncmp("haha", "hoho", 4)) \ print "equal"
 */
 
 int	ft_strncmp(const char *str1, const char *str2, size_t n)

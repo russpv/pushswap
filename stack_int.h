@@ -1,11 +1,12 @@
-#ifndef STACKINT_H
-# define STACKINT_H
+#ifndef STACK_INT_H
+# define STACK_INT_H
 
-#include "stack.h"
+# include "stack.h"
 
-#define MAX_PARTITIONS 32
-#define INIT_IDX_VALUE -1
-#define INIT_NUM_VALUE LONG_MAX
+# define MAX_PARTITIONS 32
+# define INIT_IDX_VALUE -1
+# define INIT_NUM_VALUE LONG_MAX
+# define MAX_SIZE 10000
 
 # define GREY "\033[90m"
 # define LTGREY "\033[38;5;245m"
@@ -13,27 +14,28 @@
 
 # define DEBUGGING true
 
-struct	s_stack
+struct				s_stack
 {
-	char	    		id;
-	size_t				max_size;
-	size_t				size;
-    long                min;
-    long                max;
-    size_t              last_update_size;
-	
-	long				*nums; // actual integers, not modified
-	int					*idx;  // order index of nums, ops modify this
-	int					*part_idx;  // partition id, 1:1 with nums
-	size_t              partition_count;
-    t_partition_ptr 	partitions[MAX_PARTITIONS];
+	char			id;
+	size_t			max_size;
+	size_t			size;
+	long			tmp;
+	long			min;
+	long			max;
+	size_t			last_update_size;
+
+	long			*nums;
+	int				*idx;
+	int				*part_idx;
+	size_t			partition_count;
+	t_partition_ptr	partitions[MAX_PARTITIONS];
 };
 
-struct	s_partition
+struct				s_partition
 {
-	int	id;
-	size_t		size; // increment on add
-	t_stack_ptr	stack;
+	int				id;
+	size_t			size;
+	t_stack_ptr		stack;
 };
 
 #endif

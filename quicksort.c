@@ -1,88 +1,80 @@
 #include "pushswap.h"
 
-// This is quicksort.c
-
-void	process_partition(t_state *s, t_partition_ptr top_partition,
-		t_partition_ptr partition, size_t limit)
+// Debug statement to insert at first line:
+/*	if (peek_next_stack(s->curr_stack) > s->pivot
+		&& get_stack_size(s->curr_stack) > 2)
+		mylog("Solve: push larger\n");*/
+static bool	_do_larger(t_state *s, t_partition_ptr partition,
+		t_partition_ptr top_partition, t_partition_ptr dest_partitions[])
 {
-	size_t i = 0;
-	int rot_counter = 0;
-	t_partition_ptr dest_partitions[2];
-	create_destination_partitions(s, &dest_partitions);
-	while (i < limit)
+	move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[1], \
+		PRINT_ON);
+	if (s->dest_stack == s->stacks[STACK_B])
 	{
-		mylog("Solve: %zu loop started (%zu moves remaining p:%d, %zu p's)\n",
-			i, get_partition_size(partition), get_partition_id(partition),
-			get_partition_count(s->curr_stack));
-		print_stacks(s);
-		// swap_both_if_needed(s);
+		if (partition != top_partition)
+		{
+			move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
+			return (true);
+		}
+	}
+	else if (s->dest_stack == s->stacks[STACK_A] && partition == top_partition)
+		move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
+	return (false);
+}
+
+// Debug statement to insert at first line:
+/*	if (peek_next_stack(s->curr_stack) <= s->pivot
+		&& get_stack_size(s->curr_stack) > 2)
+		mylog("Solve: %ld below median %ld\n",
+			peek_stack(s->curr_stack), s->pivot); */
+static bool	_do_smaller(t_state *s, t_partition_ptr partition,
+		t_partition_ptr top_partition, t_partition_ptr dest_partitions[])
+{
+	move(s->dest_stack, PUSH, pop_stack(s->curr_stack), dest_partitions[0], \
+		PRINT_ON);
+	if (s->dest_stack == s->stacks[STACK_B])
+	{
+		if (partition == top_partition)
+			move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
+	}
+	else if (s->dest_stack == s->stacks[STACK_A] && partition != top_partition)
+	{
+		move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
+		return (true);
+	}
+	return (false);
+}
+
+/*
+ * Stack B is sorted high to low.
+ */
+// Debug statements to add within while loop:
+/*		mylog("## Solve: %zu loop started (%zu moves remaining p:%d, \
+			%zu p's)\n", i, get_partition_size(partition), \
+			get_partition_id(partition), get_partition_count(s->curr_stack));*/
+/*		mylog("## Solve: end of round.\n\n"); */
+void	quicksort_partition(t_state *s, t_partition_ptr top_partn,
+		t_partition_ptr partn, size_t limit)
+{
+	size_t			i;
+	int				rot_counter;
+	t_partition_ptr	dest_partns[2];
+
+	i = -1;
+	rot_counter = 0;
+	create_destination_partitions(s, &dest_partns);
+	while (++i < limit)
+	{
 		if (peek_stack(s->curr_stack) <= s->pivot)
 		{
-			if (peek_next_stack(s->curr_stack) <= s->pivot
-				&& get_stack_size(s->curr_stack) > 2)
-				// swap_stack_if_needed(s);
-				mylog("Solve: %ld below median %ld\n",
-					peek_stack(s->curr_stack), s->pivot);
-			mylog("Solve: push lower\n");
-			move(s->dest_stack, PUSH, pop_stack(s->curr_stack),
-				dest_partitions[0], PRINT_ON);
-			print_stacks(s);
-			// to STACKB, largers stay on top
-			if (s->dest_stack == s->stacks[STACK_B])
-			{
-				if (partition == top_partition) /* if first partition sorting,
-					only rotate */
-				{
-					mylog("Solve: rot\n");
-					move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
-						/* TODO: wasted move if all same grouping on stack */
-				}                                                  
-					/* if not top partition, don't rotate smallers */
-			}
-			// back to STACKA, smallers go to bottom temporarily
-			else if (s->dest_stack == s->stacks[STACK_A]
-				&& partition != top_partition)
-			{ /* never an empty stack, except first partition sorting */
-				mylog("Solve: rot + banking revrot\n");
-				move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
+			if (true == _do_smaller(s, top_partn, partn, dest_partns))
 				rot_counter++;
-			}
 		}
-		else // value is large
-		{
-			if (peek_next_stack(s->curr_stack) > s->pivot
-				&& get_stack_size(s->curr_stack) > 2)
-				// swap_stack_if_needed(s);
-				mylog("Solve: push larger\n");
-			move(s->dest_stack, PUSH, pop_stack(s->curr_stack),
-				dest_partitions[1], PRINT_ON);
-			if (s->dest_stack == s->stacks[STACK_B]) // largers stay on top,
-				so temporarily go bottom
-			{
-				if (partition != top_partition) /* if not top partition,
-					rotate largers and reverse rotate later */
-				{
-					mylog("Solve: rot + reverse later\n");
-					move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
-					rot_counter++;
-				} /* if top partition, don't rotate */
-			}
-			else if (s->dest_stack == s->stacks[STACK_A]
-				&& partition == top_partition)
-			{
-				mylog("Solve: rot\n");
-				move(s->dest_stack, ROTATE, 0, NULL, PRINT_ON);
-			}
-		}
+		else if (true == _do_larger(s, top_partn, partn, dest_partns))
+			rot_counter++;
 		print_stacks(s);
-		mylog("##(end round)##\n\n");
-		fflush(stderr);
-		i++;
 	}
 	while (rot_counter-- > 0)
-	{
-		mylog("Solve: rot counter rot\n");
-		move(s->dest_stack, REV_ROTATE, 0, NULL, PRINT_ON); // move bottoms
-		print_stacks(s);
-	}
+		move(s->dest_stack, REV_ROTATE, 0, NULL, PRINT_ON);
+	print_stacks(s);
 }

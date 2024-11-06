@@ -4,7 +4,7 @@ void	create_state(t_state **state, char **argv, int argc)
 {
 	*state = malloc(sizeof(t_state));
 	if (!*state)
-		err("malloc error", *state);
+		err("ERR malloc error", *state);
 	(*state)->argv = argv;
 	(*state)->nums = (size_t)argc - 1;
 	(*state)->print_move = 1;
@@ -14,10 +14,11 @@ void	create_state(t_state **state, char **argv, int argc)
 	(*state)->stacks[STACK_B] = create_stack(STACK_B, (*state)->nums);
 	(*state)->tmp_depth = INT_MAX;
 	(*state)->tmp_t_depth = INT_MAX;
-	(*state)->tmp = -1;
+	(*state)->tmp = LONG_MAX;
+	(*state)->tmp_i = -1;
 	(*state)->tmp_moves = INT_MAX;
 	if (!(*state)->stacks[STACK_A] || !(*state)->stacks[STACK_B])
-		err("malloc error", *state);
+		err("ERR malloc error", *state);
 }
 
 void	destroy_state(t_state *s)
@@ -36,14 +37,13 @@ bool	fill_stack_a(t_state *s)
 	const int				bottom_idx = s->nums - 1;
 	const t_partition_ptr	p = create_partition(a);
 
-	;
 	if (!fill_stack(a, s->argv))
 		return (false);
 	mylog("State: stack filled\n");
 	if (get_partition_id(p) == 0)
-		mylog("Log: partition enumeration correct\n");
+		mylog("Log: partition enumeration correct\n", s);
 	else
-		mylog("Error: partition enumeration ERRPR\n");
+		err("Error: partition enumeration ERRPR\n", s);
 	if (!fill_partition(a, p, TOP_IDX, bottom_idx))
 		return (false);
 	s->curr_stack = s->stacks[STACK_A];

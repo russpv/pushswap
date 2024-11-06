@@ -13,17 +13,19 @@
 #include "libft.h"
 
 /* NOTE: va_args() can only perform the "default argument promotions" of integer
- * and unsigned integer for unprototyped variadic args */
+ * and unsigned integer for unprototyped variadic args
+ * Be careful that the correct types are passed and retrieved consistently
+ */
 
 /* Defeat any invalid input based on type rules */
-static void	_reset_specs(t_spec *specs, t_types type)
+void	reset_specs(t_spec *specs, t_types type)
 {
 	if (type == INT)
 		specs->sch = "+";
 	if (type == HEX || type == PTR)
 		specs->base = 16;
-	if (type == CHR || type == HEX || type == PTR || type == UINT || \
-		type == STR)
+	if (type == CHR || type == HEX || type == PTR || type == UINT
+		|| type == STR)
 		specs->signflg = FALSE;
 	if (type == CHR)
 		specs->mpflg = FALSE;
@@ -31,7 +33,7 @@ static void	_reset_specs(t_spec *specs, t_types type)
 		specs->pch = ' ';
 }
 
-void	do_idu_formats(const char *s, va_list *args, t_spec *specs, \
+void	do_idu_formats(const char *s, va_list *args, t_spec *specs,
 		unsigned int *bytes)
 {
 	long long			value;
@@ -41,26 +43,26 @@ void	do_idu_formats(const char *s, va_list *args, t_spec *specs, \
 	if (*s == 'i' || *s == 'd')
 	{
 		value = va_arg(*args, int);
-		_reset_specs(specs, INT);
+		reset_specs(specs, INT);
 		*bytes += print_output(type_switch(&value, INT, specs), specs);
 	}
 	else if (*s == 'u')
 	{
 		uvalue = va_arg(*args, unsigned int);
-		_reset_specs(specs, UINT);
+		reset_specs(specs, UINT);
 		*bytes += print_output(type_switch(&uvalue, UINT, specs), specs);
 	}
 	else if (*s == 'p')
 	{
 		ptr = (unsigned long long)va_arg(*args, void *);
-		_reset_specs(specs, PTR);
+		reset_specs(specs, PTR);
 		*bytes += print_output(type_switch(&ptr, PTR, specs), specs);
 	}
 	else
 		return ;
 }
 
-void	do_cs_formats(const char *s, va_list args, t_spec *specs, \
+void	do_cs_formats(const char *s, va_list args, t_spec *specs,
 		unsigned int *bytes)
 {
 	char	*string;
@@ -69,13 +71,13 @@ void	do_cs_formats(const char *s, va_list args, t_spec *specs, \
 	if (*s == 'c')
 	{
 		c = (char)va_arg(args, int);
-		_reset_specs(specs, CHR);
+		reset_specs(specs, CHR);
 		*bytes += print_output(type_switch(&c, CHR, specs), specs);
 	}
 	else if (*s == 's')
 	{
 		string = va_arg(args, char *);
-		_reset_specs(specs, STR);
+		reset_specs(specs, STR);
 		*bytes += print_output(type_switch(string, STR, specs), specs);
 	}
 	else
@@ -83,7 +85,7 @@ void	do_cs_formats(const char *s, va_list args, t_spec *specs, \
 }
 
 /* '%#x' when x is 0 is 0 */
-void	do_xx_formats(const char *s, va_list args, t_spec *specs, \
+void	do_xx_formats(const char *s, va_list args, t_spec *specs,
 		unsigned int *bytes)
 {
 	unsigned long long	num;
@@ -94,7 +96,7 @@ void	do_xx_formats(const char *s, va_list args, t_spec *specs, \
 	if (*s != 'X' && *s != 'x')
 		return ;
 	num = va_arg(args, unsigned int);
-	_reset_specs(specs, HEX);
+	reset_specs(specs, HEX);
 	res = type_switch(&num, HEX, specs);
 	if (res == NULL)
 	{
@@ -111,6 +113,7 @@ void	do_xx_formats(const char *s, va_list args, t_spec *specs, \
 	*bytes += print_output(res, specs);
 }
 
+/* Print literal % */
 void	do_pc(const char *s, unsigned int *bytes)
 {
 	if (*s == '%')

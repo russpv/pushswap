@@ -22,51 +22,58 @@ int	get_moves_back_to_head(t_stack_ptr s)
 	while (++i < (int)size)
 		if (!(get_stack_num(s, i - 1) < get_stack_num(s, i)))
 			break ;
-	if (i < get_middle_idx(s)) /* is the top idx */
+	if (i < get_middle_idx(s))
 		return (i);
 	else
-		return (-1 * ((int)size - i)); /* inclusive */
+		return (-1 * ((int)size - i));
 }
 
-// TODO parse this function and doc it
-/* Returns median of numbers on top of stack */
-int	get_median(long *nums, int *idx, size_t size)
+static int	_bubble_sort(long arr[], size_t size)
 {
-	int flag;
-	long tmp;
-	size_t i;
-	long arr[size];
+	long	tmp;
+	size_t	i;
+	int		swaps;
 
 	i = 0;
-	while (i < size)
+	swaps = 0;
+	while (++i < size)
 	{
-		arr[i] = nums[idx[i]];
-		i++;
+		if (arr[i] < arr[i - 1])
+		{
+			tmp = arr[i];
+			arr[i] = arr[i - 1];
+			arr[i - 1] = tmp;
+			swaps = 1;
+		}
 	}
+	return (swaps);
+}
+
+/* Returns median of size numbers from top of stack
+ * Uses bubble sort
+ */
+int	get_median(long *nums, int *idx, size_t size)
+{
+	long	arr[MAX_SIZE];
+	size_t	i;
+
+	i = -1;
+	while (++i < size)
+		arr[i] = nums[idx[i]];
 	if (size == 1)
 		return (arr[0]);
 	while (1)
 	{
-		i = 0;
-		flag = 0;
-		while (++i < size)
-		{
-			if (arr[i] < arr[i - 1]) // sort ascending rightward
-			{
-				tmp = arr[i];
-				arr[i] = arr[i - 1];
-				arr[i - 1] = tmp;
-				flag = 1;
-			}
-		}
-		if (flag == 0)
+		if (_bubble_sort(arr, size) == 0)
 			break ;
 	}
-	if (size % 2) // odd
+	if (size % 2)
 	{
-		mydebug("Log: median:%ld\n", arr[size / 2]);
+		if (true == DEBUGGING)
+			mydebug("---- (get_median) -- %d\n", arr[size / 2]);
 		return (arr[size / 2]);
 	}
-	mydebug("---- (get_median): median:%ld\n", arr[size / 2 - 1]);
+	if (true == DEBUGGING)
+		mydebug("---- (get_median) -- %d\n", arr[size / 2 - 1]);
 	return (arr[size / 2 - 1]);
 }

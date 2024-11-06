@@ -1,9 +1,13 @@
 NAME = push_swap
 OUTPUT = executable
 
-SOURCES = main.c solver.c s2.c \
-		  err.c \
-		  stack.c partition.c state.c 
+SOURCES = main.c solver.c err.c quicksort.c \
+		  state_.c state_checks.c state_moves.c state_moves_2.c state_utils.c \
+		  stack_.c stack_checks.c stack_getters.c stack_getters_2.c stack_moves.c \
+		  	stack_peeks.c stack_pushpop.c stack_search.c stack_utils.c stack_setters.c \
+		  partition_.c partition_getters.c partition_getters_2.c partition_setters.c \
+		  greedysort_.c greedysort_abs.c greedysort_findalts.c greedysort_getmoves.c \
+		  	greedysort_search.c
           
 BONUS_SOURCES = $(SOURCES)
 BONUS_OBJECTS = $(BONUS_SOURCES:.c=.o)

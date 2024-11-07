@@ -111,11 +111,7 @@ int	ft_vprintf(const char *s, va_list *args)
 			if (in_set(s, FLAGS) == TRUE || ft_isdigit(*s) || *s == '.')
 				if (_parse_specs_or_reset(&s, &specs, &bytes) == FALSE)
 					continue ;
-			#ifdef __aarch64__
-			_do_formats(&s, &args, &specs, &bytes);
-			#else
 			_do_formats(&s, args, &specs, &bytes);
-			#endif
 		}
 	}
 	return (bytes);

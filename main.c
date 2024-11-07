@@ -13,16 +13,16 @@
 int	main(int argc, char **argv)
 {
 	t_state	*state;
-
+	char **args = malloc(sizeof(char**));
 	state = NULL;
 	if (argc < 2)
 		return (EXIT_FAILURE);
-	if (parse_args(argc, argv) == FAILURE)
+	if (parse_args(&argc, argv, args) == FAILURE)
 	{
 		ft_printf("Error");
 		return (EXIT_FAILURE);
 	}
-	create_state(&state, argv, argc);
+	create_state(&state, args, argc);
 	solver(state);
 	destroy_state(state);
 	return (EXIT_SUCCESS);

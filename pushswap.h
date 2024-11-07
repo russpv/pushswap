@@ -65,7 +65,7 @@ typedef struct s_state
 }				t_state;
 
 // main.c
-int	parse_args(int a, char **b);
+int				parse_args(int *a, char **b, char**c);
 
 // state.c
 void			create_state(t_state **a, char **b, int c);

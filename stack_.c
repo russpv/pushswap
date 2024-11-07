@@ -15,11 +15,14 @@ t_stack_ptr	create_stack(const char id, const size_t size)
 	size_t		i;
 	t_stack_ptr	stack;
 
+	if (!(size > 0))
+		return (mydebug("ERR stack size 0\n"), NULL);
 	stack = malloc(sizeof(struct s_stack));
 	if (stack)
 	{
 		stack->id = id;
-		stack->max_size = size;
+		stack->max_size = size - 1;
+		stack->size = 0;
 		stack->partition_count = 0;
 		stack->nums = malloc(sizeof(long) * size);
 		stack->idx = malloc(sizeof(int) * size);
@@ -35,6 +38,7 @@ t_stack_ptr	create_stack(const char id, const size_t size)
 		while (++i < size)
 			_do_loop(i, stack);
 	}
+	mydebug("---- (created stack) max_size:%zu id:%d\n", stack->max_size, stack->id);
 	return (stack);
 }
 
@@ -98,6 +102,7 @@ bool	fill_stack(t_stack_ptr stack, char **argv)
 	while (argv[i + 1] != NULL)
 	{
 		stack->nums[i] = (long)ft_atoi(argv[i + 1]);
+		mydebug("added:%ld", (long)ft_atoi(argv[i + 1]));
 		stack->idx[i] = i;
 		stack->size++;
 		i++;

@@ -64,6 +64,9 @@ typedef struct s_state
 	int			tmp_t_depth;
 }				t_state;
 
+// main.c
+int	parse_args(int a, char **b);
+
 // state.c
 void			create_state(t_state **a, char **b, int c);
 void			destroy_state(t_state *a);

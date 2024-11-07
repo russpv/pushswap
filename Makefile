@@ -22,9 +22,9 @@ RESET = \033[0m
 BOLD = \033[1m
 
 # Compiler and flags
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
-LDFLAGS = -L$(LIB_DIR) -lft
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -g -fPIE
+LDFLAGS = -L$(LIB_DIR) -lft -pie
 LDFLAGS_SO = -L$(LIB_DIR) -lft -Wl,-rpath,$(LIB_DIR)
 
 LIB_CPDIR = .

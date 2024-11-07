@@ -6,7 +6,7 @@
 /*   By: rpeavey <rpeavey@student.42singapore.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 20:18:27 by rpeavey           #+#    #+#             */
-/*   Updated: 2024/06/19 20:29:49 by rpeavey          ###   ########.fr       */
+/*   Updated: 2024/11/07 13:24:52 by rpeavey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ t_list					*ft_lstmap(t_list *lst, void *(*f)(void *),
 							void (*del)(void *));
 
 int						ft_printf(const char *s, ...);
-int						ft_vprintf(const char *s, va_list a);
+int						ft_vprintf(const char *s, va_list *a);
 char					*type_switch(void *val, t_types typ, t_spec *specs);
 char					*repeat(size_t len, char ch);
 

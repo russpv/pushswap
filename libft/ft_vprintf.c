@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   ft_vprintf.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rpeavey <rpeavey@student.42singapore.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 15:50:33 by rpeavey           #+#    #+#             */
-/*   Updated: 2024/07/30 17:56:56 by rpeavey          ###   ########.fr       */
+/*   Updated: 2024/11/07 13:24:35 by rpeavey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static inline int	_do_formats(const char **s, va_list *args, \
 	return (TRUE);
 }
 
-int	ft_vprintf(const char *s, va_list args)
+int	ft_vprintf(const char *s, va_list *args)
 {
 	t_spec				specs;
 	unsigned int		bytes;
@@ -111,7 +111,7 @@ int	ft_vprintf(const char *s, va_list args)
 			if (in_set(s, FLAGS) == TRUE || ft_isdigit(*s) || *s == '.')
 				if (_parse_specs_or_reset(&s, &specs, &bytes) == FALSE)
 					continue ;
-			#ifdef __clang__
+			#ifdef __aarch64__
 			_do_formats(&s, &args, &specs, &bytes);
 			#else
 			_do_formats(&s, args, &specs, &bytes);

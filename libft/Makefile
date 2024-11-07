@@ -33,7 +33,7 @@ BOLD = \033[1m
 AR = ar -rvcs
 CC = cc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g -fPIC
 
 # Targets
 all: $(NAME)

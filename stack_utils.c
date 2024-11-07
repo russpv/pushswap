@@ -1,5 +1,16 @@
 #include "stack_int.h"
 
+void	stackprintarr(char **arr)
+{
+	mydebug("Array:");
+	while (*arr)
+	{
+		mydebug("%s,", *arr);
+		arr++;
+	}
+	mydebug("|\n");
+}
+
 void	mydebug(const char *format, ...)
 {
 	int		original_stdout;

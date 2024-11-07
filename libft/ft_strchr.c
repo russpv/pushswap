@@ -13,7 +13,7 @@
 #include "libft.h"
 
 /* STRCHR
-** Returns ptr to first occurence of char
+** Returns ptr to first occurrence of char
 ** or NULL
 ** UNPROTECTED
 ** Note: gcc runs it faster w/o longword checking or independent

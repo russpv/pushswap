@@ -17,7 +17,7 @@
 # define RESET "\033[0m"
 # define PRINT_ON 1
 # define PRINT_OFF 0
-# define LOGGING true
+# define LOGGING false
 # define TOP_IDX 0
 
 enum			e_stacks
@@ -45,7 +45,7 @@ typedef struct s_state
 	t_stack_ptr	curr_stack;
 	t_stack_ptr	dest_stack;
 
-	char		**argv;
+	char		**args;
 	size_t		nums;
 
 	long		pivot;
@@ -65,7 +65,7 @@ typedef struct s_state
 }				t_state;
 
 // main.c
-int				parse_args(int *a, char **b, char**c);
+int				parse_args(int *a, char **b, char***c);
 
 // state.c
 void			create_state(t_state **a, char **b, int c);
@@ -106,8 +106,9 @@ void			solver(t_state *a);
 void			quicksort_partition(t_state *a, t_partition_ptr b,
 					t_partition_ptr c, size_t d);
 
-// err.c
+// utils.c
 void			err(char *a, t_state *b);
+void			printarr(char**a);
 void			mylog(const char *a, ...);
 
 #endif

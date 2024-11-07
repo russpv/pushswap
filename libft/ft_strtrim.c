@@ -19,7 +19,7 @@
 ** UNPROTECTED
 */
 
-static inline int	is_set(char const *s1, char const *set)
+static inline int	_intersects(char const *s1, char const *set)
 {
 	while (*s1 && *set)
 		if (*s1 == *set++)
@@ -34,12 +34,12 @@ char	*ft_strtrim(char const *s1, char const *set)
 	char	*end;
 
 	str = (char *)s1;
-	while (is_set(s1, set))
+	while (_intersects(s1, set))
 		s1++;
 	end = ft_strchr(s1, 0);
 	if (end != s1)
 	{
-		while (is_set(--end, set))
+		while (_intersects(--end, set))
 			;
 		len = end - s1 + 1;
 	}

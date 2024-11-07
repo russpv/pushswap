@@ -3,7 +3,7 @@ NAME2 = checker
 
 OUTPUT = executable
 
-SOURCES = main.c solver.c utils.c quicksort.c \
+SOURCES = main.c solver.c utils.c argparse.c quicksort.c \
 		  state_.c state_checks.c state_moves.c state_moves_2.c state_utils.c \
 		  stack_.c stack_checks.c stack_getters.c stack_getters_2.c stack_moves.c \
 		  	stack_peeks.c stack_pushpop.c stack_search.c stack_utils.c stack_setters.c \

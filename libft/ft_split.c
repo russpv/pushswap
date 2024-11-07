@@ -36,7 +36,7 @@ static inline t_bool	is_print(char const *p)
 	return (FALSE);
 }
 
-/* Returns non-empty string count in C-string p*/
+/* Returns non-empty string count in C-string p */
 static inline int	get_word_count(char const *p, char ch)
 {
 	const char		*temp;

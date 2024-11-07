@@ -21,7 +21,7 @@ t_stack_ptr	create_stack(const char id, const size_t size)
 	if (stack)
 	{
 		stack->id = id;
-		stack->max_size = size - 1;
+		stack->max_size = size;
 		stack->size = 0;
 		stack->partition_count = 0;
 		stack->nums = malloc(sizeof(long) * size);
@@ -97,6 +97,8 @@ bool	fill_stack(t_stack_ptr stack, char **argv)
 	size_t	i;
 
 	i = 0;
+		stackprintarr(argv);
+
 	if (NULL == stack)
 		return (false);
 	while (argv[i + 1] != NULL)

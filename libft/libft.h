@@ -94,6 +94,7 @@ typedef unsigned long	long(t_uintptr_t);
 # define FLAGS "#-+0 "
 # define SPECS "cspduixX%"
 # define SPECS2 "ldzu"
+# define WHITESPACE " \t\n\r\v\f"
 # define SUCCESS 0
 # define FAILURE -1
 # define TRUE 1
@@ -154,6 +155,7 @@ char					*ft_substr(char const *s, unsigned int start,
 char					*ft_strjoin(char const *s1, char const *s2);
 char					*ft_strtrim(char const *s1, char const *set);
 char					**ft_split(char const *s, char c);
+size_t					ft_arrlen(char const **p);
 
 /*
 ** Memory manipulation
@@ -170,6 +172,7 @@ char					*ft_memdup(const char *s, size_t size);
 void					ft_putmem(char const *s, size_t size);
 char					*ft_memjoin(char const *s1, char const *s2, size_t l1,
 							size_t l2);
+int						ft_freearr(char **a);
 
 /*
 ** Tests
@@ -204,8 +207,8 @@ int						ft_lstsize(t_list *lst);
 void					ft_lstdelone(t_list *lst, void (*del)(void *));
 void					ft_lstclear(t_list **lst, void (*del)(void *));
 void					ft_lstiter(t_list *lst, void (*f)(void *));
-t_list					*ft_lstmap(t_list *lst, void *(*f)(void *),
-							void (*del)(void *));
+//t_list					*ft_lstmap(t_list *lst, void *(*f)(void *),
+//							void (*del)(void *));
 
 int						ft_printf(const char *s, ...);
 int						ft_vprintf(const char *s, va_list *a);
@@ -242,5 +245,6 @@ void					do_pc(const char *s, unsigned int *b);
 int						do_ldzu_formats(const char *s, va_list *args,
 							t_spec *specs, unsigned int *b);
 void					reset_specs(t_spec *specs, t_types type);
+
 
 #endif

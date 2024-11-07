@@ -12,7 +12,7 @@
 # define LTGREY "\033[38;5;245m"
 # define RESET "\033[0m"
 
-# define DEBUGGING true
+# define DEBUGGING false
 
 struct				s_stack
 {
@@ -37,5 +37,8 @@ struct				s_partition
 	size_t			size;
 	t_stack_ptr		stack;
 };
+
+void	stackprintarr(char **arr);
+
 
 #endif

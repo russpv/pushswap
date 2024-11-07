@@ -1,18 +1,16 @@
 #include "pushswap.h"
 
-void	create_state(t_state **state, char **argv, int argcm)
+void	create_state(t_state **state, char **args, int argcm)
 {
-	fprintf(stderr, "argc=%d", argcm);
 	*state = malloc(sizeof(t_state));
 	if (!*state)
 		err("ERR malloc error", *state);
-	(*state)->argv = argv;
-	(*state)->nums = (size_t)argcm;
-	fprintf(stderr, "nums=%zu", (*state)->nums);
+	(*state)->args = args;
+	(*state)->nums = (size_t)argcm - 1;
 	(*state)->print_move = 1;
 	(*state)->curr_pass = 0;
 	(*state)->curr_stack = NULL;
-	(*state)->stacks[STACK_A] = create_stack(STACK_A, 3);
+	(*state)->stacks[STACK_A] = create_stack(STACK_A, (*state)->nums);
 	(*state)->stacks[STACK_B] = create_stack(STACK_B, (*state)->nums);
 	(*state)->tmp_depth = INT_MAX;
 	(*state)->tmp_t_depth = INT_MAX;
@@ -21,7 +19,7 @@ void	create_state(t_state **state, char **argv, int argcm)
 	(*state)->tmp_moves = INT_MAX;
 	if (!(*state)->stacks[STACK_A] || !(*state)->stacks[STACK_B])
 		err("ERR malloc error", *state);
-	fprintf(stderr, "created state\n");
+	mylog("Created state.\n");
 }
 
 void	destroy_state(t_state *s)
@@ -40,8 +38,7 @@ bool	fill_stack_a(t_state *s)
 	const int				bottom_idx = s->nums - 1;
 	const t_partition_ptr	p = create_partition(a);
 
-	fprintf(stderr, "fillstacka\n");
-	if (!fill_stack(a, s->argv))
+	if (!fill_stack(a, s->args))
 		return (false);
 	mylog("State: stack filled\n");
 	if (get_partition_id(p) == 0)

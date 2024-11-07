@@ -13,11 +13,13 @@
 int	main(int argc, char **argv)
 {
 	t_state	*state;
-	char **args = malloc(sizeof(char**));
+	char **args;
+
+	args = NULL;
 	state = NULL;
 	if (argc < 2)
 		return (EXIT_FAILURE);
-	if (parse_args(&argc, argv, args) == FAILURE)
+	if (parse_args(&argc, argv, &args) == FAILURE)
 	{
 		ft_printf("Error");
 		return (EXIT_FAILURE);

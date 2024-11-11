@@ -91,20 +91,21 @@ void	destroy_stack(t_stack_ptr stack)
 	free(stack);
 }
 
-/* Populates nums and idx only */
-bool	fill_stack(t_stack_ptr stack, char **argv)
+/* Populates nums and idx only 
+ * Expects an argument array of C strings */
+bool	fill_stack(t_stack_ptr stack, char **args)
 {
 	size_t	i;
 
 	i = 0;
-		stackprintarr(argv);
+	stackprintarr(args);
 
 	if (NULL == stack)
 		return (false);
-	while (argv[i + 1] != NULL)
+	while (args[i] != NULL)
 	{
-		stack->nums[i] = (long)ft_atoi(argv[i + 1]);
-		mydebug("added:%ld", (long)ft_atoi(argv[i + 1]));
+		stack->nums[i] = (long)ft_atoi(args[i]);
+		mydebug("added:%ld", (long)ft_atoi(args[i]));
 		stack->idx[i] = i;
 		stack->size++;
 		i++;

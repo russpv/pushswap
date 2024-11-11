@@ -3,16 +3,16 @@ NAME2 = checker
 
 OUTPUT = executable
 
-SOURCES = main.c solver.c utils.c argparse.c quicksort.c \
+SOURCES = ps_main.c ps_solver.c ps_utils.c ps_argparse.c ps_qsort.c \
 		  state_.c state_checks.c state_moves.c state_moves_2.c state_utils.c \
 		  stack_.c stack_checks.c stack_getters.c stack_getters_2.c stack_moves.c \
 		  	stack_peeks.c stack_pushpop.c stack_search.c stack_utils.c stack_setters.c \
 		  partition_.c partition_getters.c partition_getters_2.c partition_setters.c \
 		  greedysort_.c greedysort_abs.c greedysort_findalts.c greedysort_getmoves.c \
-		  	greedysort_search.c          
+		  	greedysort_search.c ht.c       
 BONUS_SOURCES = ./tester/checker.c
 
-BONUS_OBJECTS = $(BONUS_SOURCES:.c=.o) $(filter-out main.o, $(SOURCES:.c=.o))
+BONUS_OBJECTS = $(BONUS_SOURCES:.c=.o) $(filter-out ps_main.o, $(SOURCES:.c=.o))
 OBJECTS = $(SOURCES:.c=.o)
 
 # Colors
@@ -48,7 +48,6 @@ $(NAME): $(LIB_PATH) $(OBJECTS)
 bonus: $(NAME2)
 
 $(NAME2): $(LIB_PATH) $(BONUS_OBJECTS)
-
 	@echo "Creating $(NAME2) $(OUTPUT)..."
 	$(CC) $^ -o $@ $(CFLAGS)
 	chmod +x $@

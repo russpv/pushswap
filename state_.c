@@ -6,7 +6,7 @@ void	create_state(t_state **state, char **args, int argcm)
 	if (!*state)
 		err("ERR malloc error", *state);
 	(*state)->args = args;
-	(*state)->nums = (size_t)argcm - 1;
+	(*state)->nums = (size_t)argcm;
 	(*state)->print_move = 1;
 	(*state)->curr_pass = 0;
 	(*state)->curr_stack = NULL;
@@ -24,6 +24,8 @@ void	create_state(t_state **state, char **args, int argcm)
 
 void	destroy_state(t_state *s)
 {
+	if (NULL == s)
+		return ;
 	destroy_stack(s->stacks[STACK_A]);
 	destroy_stack(s->stacks[STACK_B]);
 	free(s);
@@ -44,7 +46,7 @@ bool	fill_stack_a(t_state *s)
 	if (get_partition_id(p) == 0)
 		mylog("Log: partition enumeration correct\n", s);
 	else
-		err("Error: partition enumeration ERRPR\n", s);
+		err("Error: partition enumeration\n", s);
 	if (!fill_partition(a, p, TOP_IDX, bottom_idx))
 		return (false);
 	s->curr_stack = s->stacks[STACK_A];

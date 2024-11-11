@@ -1,8 +1,8 @@
-#include "../pushswap.h"
 #include "checker.h"
 
 # define BUFFER_SIZE 4
 
+/* Read-only global variables */
 static t_push_move push[MOVE_CNT];
 static t_single_move single_moves[MOVE_CNT];
 static t_dbl_move double_moves[MOVE_CNT];
@@ -74,6 +74,30 @@ static bool	_do_move(t_state *s, enum e_move move)
 	else
 		single_moves[move].m(single_moves[move].st);
 	return (true);
+}
+
+char *get_next_line(int fd)
+{
+	char c;
+	char buf[BUFFER_SIZE];
+	int	bytes;
+	unsigned long i;
+
+	i = 0;
+	c = 0;
+	while (i < sizeof(buf) - 1)
+	{
+		bytes = read(fd, &c, sizeof(buf));
+		if (bytes < 0)
+			return (NULL);
+		if (0 == bytes || '\n' == c)
+			break ;
+		buf[i++] = c;
+	}
+	if (0 == i)
+		return (NULL);
+	buf[i] = '\0';
+	return (ft_strdup(buf));
 }
 
 // get from stdin and send move to do_move()

@@ -12,7 +12,7 @@
 # define LTGREY "\033[38;5;245m"
 # define RESET "\033[0m"
 
-# define DEBUGGING false
+# define DEBUGGING true
 
 struct				s_stack
 {

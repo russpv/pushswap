@@ -19,7 +19,13 @@ void	mydebug(const char *format, ...)
 	if (true == DEBUGGING)
 	{
 		original_stdout = dup(STDOUT_FILENO);
-		dup2(STDERR_FILENO, STDOUT_FILENO);
+		if (-1 == original_stdout)
+			return ;
+		if (-1 == dup2(STDERR_FILENO, STDOUT_FILENO))
+		{
+			close(original_stdout);
+			return ;
+		}
 		ft_printf("%s", GREY);
 		va_start(args, format);
 		#if defined(__APPLE__)

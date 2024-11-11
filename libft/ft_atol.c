@@ -1,31 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rpeavey <rpeavey@student.42singapore.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/27 20:10:02 by rpeavey           #+#    #+#             */
-/*   Updated: 2024/05/27 20:10:03 by rpeavey          ###   ########.fr       */
+/*   Created: 2024/05/27 20:01:44 by rpeavey           #+#    #+#             */
+/*   Updated: 2024/05/27 20:16:36 by rpeavey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-/* STRDUP
-** This returns pointer to new string
-** malloc handles errno
+/* ATOL
+** Returns long value of byte string.
+** Skips any isspace(3)
+** No error checking.
 */
 
-char	*ft_strdup(const char *s)
+long	ft_atol(const char *s)
 {
-	char	*newstr;
-	size_t	len;
+	long	num;
+	int		flag;
 
-	len = ft_strlen(s);
-	newstr = (char *)malloc(sizeof(char) * (len + 1));
-	if (!newstr)
-		return (NULL);
-	newstr[len] = 0;
-	return (ft_memcpy(newstr, s, len));
+	flag = 1;
+	num = 0;
+	while (ft_isspace(*s))
+		s++;
+	if (*s == '-' || *s == '+')
+	{
+		if (*s == '-')
+			flag *= -1;
+		s++;
+	}
+	while (ft_isdigit(*s))
+	{
+		num *= 10;
+		num += *s - '0';
+		s++;
+	}
+	return (flag * num);
 }

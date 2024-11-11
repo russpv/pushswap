@@ -1,9 +1,10 @@
 NAME = libft.a
 SO_NAME = libft.so
 
-SOURCES =   ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c \
-    ft_isascii.c ft_isdigit.c ft_isprint.c ft_isspace.c ft_itoa.c \
-    ft_itoa_base.c ft_memccpy_extra.c ft_memchr.c ft_memcmp.c \
+SOURCES =   ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c \
+    ft_isascii.c ft_isdigit.c ft_isprint.c ft_isspace.c \
+	ft_itoa.c ft_itoa_base.c ft_atoi.c ft_atol.c \
+	ft_memccpy_extra.c ft_memchr.c ft_memcmp.c \
     ft_memcpy.c ft_memdup.c ft_memjoin.c ft_memmove.c ft_memset.c \
     ft_printf.c ft_vprintf.c ft_putchar.c ft_putchar_fd.c \
 			printf_flags.c printf_flags2.c printf_formats.c printf_formats2.c \

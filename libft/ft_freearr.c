@@ -6,10 +6,10 @@ int	ft_freearr(char **arr)
 
 	i = -1;
 	if (arr == NULL)
-		return (0);
-	const size_t size = ft_arrlen((const char **)arr);
-	while (++i < size)
+		return (FAILURE);
+	const size_t len = ft_arrlen((const char **)arr);
+	while (++i < len)
 		free(arr[i]);
 	free(arr);
-	return (1);
+	return (SUCCESS);
 }

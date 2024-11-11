@@ -78,6 +78,10 @@ static void	_swap(t_stack_ptr s, va_list args)
 	print_stack_name(s);
 }
 
+
+/* Requires variadic input:
+ * num, partition, print flag
+ */ 
 void	move(t_stack_ptr s, enum e_move_type move, ...)
 {
 	const t_move	jumptable[MOVE_COUNT] = {_push, _rotate, _rev_rotate, \

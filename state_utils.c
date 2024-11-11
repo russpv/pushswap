@@ -28,7 +28,13 @@ void	mylog(const char *format, ...)
 	if (true == LOGGING)
 	{
 		original_stdout = dup(STDOUT_FILENO);
-		dup2(STDERR_FILENO, STDOUT_FILENO);
+		if (-1 == original_stdout)
+			return ;
+		if (-1 == dup2(STDERR_FILENO, STDOUT_FILENO))
+		{
+			close(original_stdout);
+			return ;
+		}
 		ft_printf("%s", LTGREY);
 		va_start(args, format);
 		#if defined(__APPLE__)
@@ -38,7 +44,8 @@ void	mylog(const char *format, ...)
 		#endif
 		va_end(args);
 		ft_printf("%s", RESET);
-		dup2(original_stdout, STDOUT_FILENO);
+		if (-1 == dup2(original_stdout, STDOUT_FILENO))
+			;
 		close(original_stdout);
 	}
 }

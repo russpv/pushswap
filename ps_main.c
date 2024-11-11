@@ -10,6 +10,13 @@
 // compute the closest number in stack b, push to a
 // rotate stack a
 
+/* Requirements:
+ * - Silently returns if no arguments passed
+ * - Print only "Error" otherwise
+ * - If sent a sorted array, silently return
+ * - Only unique integers can be sorted
+ * - ...
+ */
 int	main(int argc, char **argv)
 {
 	t_state	*state;
@@ -27,5 +34,6 @@ int	main(int argc, char **argv)
 	create_state(&state, args, argc);
 	solver(state);
 	destroy_state(state);
+	ft_freearr(args);
 	return (EXIT_SUCCESS);
 }

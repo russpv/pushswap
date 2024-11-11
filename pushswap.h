@@ -3,6 +3,7 @@
 
 # include "libft/libft.h"
 # include "stack.h"
+# include "ht.h"
 # include <fcntl.h>
 # include <limits.h>
 # include <stdarg.h>
@@ -11,13 +12,14 @@
 # include <unistd.h>
 
 # define STACKS 2
+# define MAX_NUMS 5000
 # define RED "\033[31m"
 # define GREY "\033[90m"
 # define LTGREY "\033[38;5;245m"
 # define RESET "\033[0m"
 # define PRINT_ON 1
 # define PRINT_OFF 0
-# define LOGGING false
+# define LOGGING true
 # define TOP_IDX 0
 
 enum			e_stacks

@@ -192,6 +192,7 @@ t_bool					ft_isspace(int c);
 */
 
 int						ft_atoi(const char *str);
+long					ft_atol(const char *str);
 char					*ft_itoa(long long n);
 char					*ft_itoa_base(unsigned long long n, unsigned int base);
 

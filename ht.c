@@ -36,8 +36,6 @@ struct s_entry	*lookup(char *s)
 
 static int	_install_data(struct s_entry *np, char *data)
 {
-	if (np->data)
-		free((void *)np->data);
 	if (NULL != data)
 	{
 		np->data = ft_strdup(data);
@@ -49,7 +47,9 @@ static int	_install_data(struct s_entry *np, char *data)
 	return (0);
 }
 
-/* Makes new entry the head for the hash bucket */
+/* Makes new entry the head for the hash bucket 
+ * Returns NULL if name is already present
+ */
 struct s_entry	*install(char *name, char *data)
 {
 	struct s_entry	*np;
@@ -69,8 +69,10 @@ struct s_entry	*install(char *name, char *data)
 		hashval = hash(name);
 		np->next = g_hasht[hashval];
 		g_hasht[hashval] = np;
+		if (-1 == _install_data(np, data))
+			return (NULL);
 	}
-	if (-1 == _install_data(np, data))
+	else
 		return (NULL);
 	return (np);
 }

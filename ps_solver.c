@@ -47,7 +47,8 @@ static void	_five_solve(t_state *s)
 	}
 	mylog("Calling three_solve\n");
 	_three_solve(s);
-	mylog("Calling greedy_sort\n");
+	mylog("Flipping stacks and calling greedy_sort\n");
+	flip_curr_stack(s);
 	if (false == greedy_sort(s))
 		err("ERR greedy sort failed\n", s);
 	if (is_sorted_asc(s->stacks[STACK_A]) && is_full(s->stacks[STACK_A]))

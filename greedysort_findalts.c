@@ -31,10 +31,10 @@ static int	_increment(int i, int direction)
  * CHANGES: uses struct tmp vars instead of local
  */
 // Debug statements to add back:
-	/* mydebug("\033[34m---- (find alts) -- nonzero target depth,\
-		testing destnum:%ld t_depth:%d, vs num:%ld idx:%d depth:%d\
-		 dist:%ld\033[0m\n", dest_num, s->target_depth, num, idx, \
-		 s->depth, min_dist); */
+// mydebug("\033[34m---- (find alts) -- nonzero target depth,
+//	testing destnum:%ld t_depth:%d, vs num:%ld idx:%d depth:%d
+//	dist:%ld\033[0m\n", dest_num, s->target_depth, num, idx,
+//	s->depth, min_dist);
 	// mydebug("\033[44m---- (Find alts) -- closer:%d\n\033[0m", s->tmp);
 	/* mydebug("\033[34m---- (Find alts) -- returning num:%ld idx:%d 
 	depth:%d (iter:%d)\n\033[0m",

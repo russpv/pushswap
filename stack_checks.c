@@ -25,7 +25,7 @@ bool	is_sorted_asc(t_stack_ptr s)
 	i = 1;
 	if (!s)
 		return (false);
-	if (s->size < (size_t)2)
+	if (s->size == 0 || s->size == 1)
 		return (true);
 	while (i < s->size)
 	{

@@ -13,11 +13,11 @@
 # define RESET "\033[0m"
 
 # ifdef CHECKER_MODE
-#  define DEBUGGING false
-#  define LOGGING false
+#  define DEBUGGING 1
+#  define LOGGING 1
 # else
-#  define DEBUGGING false
-#  define LOGGING false
+#  define DEBUGGING 0
+#  define LOGGING 0
 # endif
 
 struct				s_stack

@@ -5,12 +5,14 @@
 # ifdef CHECKER_MODE
 #  undef DEBUGGING
 #  undef LOGGING
-#  define DEBUGGING true
-#  define LOGGING true
+#  define DEBUGGING 1
+#  define LOGGING 1
 # else
-#  define DEBUGGING false
-#  define LOGGING false
+#  define DEBUGGING 0
+#  define LOGGING 0
 # endif
+
+# define BUFFER_SIZE 10
 # define MAX_PARTITIONS 32
 
 enum					e_move
@@ -30,7 +32,7 @@ enum					e_move
 	NOT_FOUND,
 };
 
-struct					pair
+struct					s_pair
 {
 	char				*k;
 	int					v;
@@ -61,5 +63,7 @@ typedef struct s_move_dbl
 {
 	t_dmovef			m;
 }						t_dbl_move;
+
+char	*get_next_line(int fd);
 
 #endif

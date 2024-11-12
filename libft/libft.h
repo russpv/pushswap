@@ -6,7 +6,7 @@
 /*   By: rpeavey <rpeavey@student.42singapore.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 20:18:27 by rpeavey           #+#    #+#             */
-/*   Updated: 2024/11/07 13:24:52 by rpeavey          ###   ########.fr       */
+/*   Updated: 2024/11/12 17:57:17 by rpeavey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,5 @@ void					do_pc(const char *s, unsigned int *b);
 int						do_ldzu_formats(const char *s, va_list *args,
 							t_spec *specs, unsigned int *b);
 void					reset_specs(t_spec *specs, t_types type);
-
 
 #endif

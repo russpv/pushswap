@@ -13,13 +13,13 @@
 	return true
  */
 // Debug statements to add back:
-/* mydebug("\033[32m---- (closer_than) >> checking extremum (%ld destnum\
-		%d moves, %d depth, %d t_depth)...\n\033[0m", dest_num, ref_moves, \
-		s->depth, s->target_depth); */
-/* mydebug("\033[32m---- (closer_than) >> extremum,\
-		not closer.\n\033[0m"); */
-/* 		mydebug("\033[32m---- (closer_than) >> closer number! (%d - %d) v (%d -\
-			%d)\n\033[0m", curr_num, dest_num, ref_num, dest_num);*/
+// mydebug("\033[32m---- (closer_than) >> checking extremum (%ld destnum
+//	%d moves, %d depth, %d t_depth)...\n\033[0m", dest_num, ref_moves,
+//	s->depth, s->target_depth);
+// mydebug("\033[32m---- (closer_than) >> extremum,
+//	not closer.\n\033[0m");
+// mydebug("\033[32m---- (closer_than) >> closer number! (%d - %d) v (%d -
+//	%d)\n\033[0m", curr_num, dest_num, ref_num, dest_num);
 static bool	_closer_than(t_state *s, int curr_idx, int ref_idx, int ref_moves)
 {
 	const int	dest_idx = get_stack_idx_at_depth(s->dest_stack, \
@@ -83,13 +83,13 @@ static int	_skip_pointless_indices(t_state *s, int min_idx_moves, const int i)
  * Skips over numbers in middle of stack where sensible
  */
 // Debug statements to add back:
-/* mydebug("\033[33m-- (find_cheapest) -- result: new min (%ld  i:%d) for \
-				%d moves\n\033[0m", get_stack_num(s->curr_stack, i), i, moves); 
-				*/
-/* mydebug("\033[43m-- (find cheapest) -- Searched %d idx's,\
-		Found cheapest i:%d n:%ld moves:%d d:%d td:%d \033[0m\n", i, s->tmp_i, \
-		get_stack_num(s->curr_stack, s->tmp_i), s->tmp_moves, s->depth, \
-		s->target_depth); */
+// mydebug("\033[33m-- (find_cheapest) -- result: new min (%ld  i:%d) for
+//	%d moves\n\033[0m", get_stack_num(s->curr_stack, i), i, moves); 
+
+// mydebug("\033[43m-- (find cheapest) -- Searched %d idx's,
+//		Found cheapest i:%d n:%ld moves:%d d:%d td:%d \033[0m\n", i, s->tmp_i, 
+//		get_stack_num(s->curr_stack, s->tmp_i), s->tmp_moves, s->depth, 
+//		s->target_depth);
 int	find_cheapest_idx(t_state *s)
 {
 	int	i;

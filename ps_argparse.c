@@ -41,6 +41,8 @@ static char	**_realloc_argv(char **argv, size_t i)
 	int		len;
 	char	**args;
 
+	if (NULL == argv[i])
+		return (NULL);
 	arr = ft_split(argv[i], ' ');
 	if (!arr)
 		return (NULL);
@@ -48,7 +50,7 @@ static char	**_realloc_argv(char **argv, size_t i)
 	args = malloc(sizeof(char *) * (len + 1));
 	if (args)
 	{
-		ft_memset(args, 0, len + 1);
+		ft_memset(args, 0, sizeof(char *) * (len + 1));
 		i = -1;
 		while (++i < (size_t)len)
 			if (FAILURE == _realloc_word(arr[i], &(args[i])))

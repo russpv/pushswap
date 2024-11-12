@@ -7,10 +7,10 @@ if [ "$1" = "--no-duplicates" ]; then
 fi
 
 # Number of random integers to generate
-COUNT=1000
+COUNT=500
 
 # Maximum value for the random integers
-MAX_VALUE=1000000
+MAX_VALUE=1000
 
 # Generate random integers and store them in ARG
 ARG=""

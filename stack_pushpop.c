@@ -1,12 +1,12 @@
 #include "stack_int.h"
 
-static int	_get_next_free_idx(t_stack_ptr stack)
+static int	_get_next_free_nums_idx(t_stack_ptr stack)
 {
 	int	i;
 
 	i = -1;
 	while (++i < (int)stack->max_size)
-		if (stack->idx[i] == INIT_IDX_VALUE)
+		if (stack->nums[i] == INIT_NUM_VALUE)
 			return (i);
 	if ((int)stack->max_size == i)
 		i = -1;
@@ -19,21 +19,19 @@ static int	_get_next_free_idx(t_stack_ptr stack)
  */
 bool	push_stack(t_stack_ptr stack, int num, t_partition_ptr partition)
 {
-	const int	free_idx = _get_next_free_idx(stack);
+	const int	free_nums_idx = _get_next_free_nums_idx(stack);
 
-	if (-1 == free_idx)
+	if (-1 == free_nums_idx || NULL == partition)
 		return (false);
-	if (NULL == partition)
-		partition = create_partition(stack);
 	if (true == DEBUGGING)
 		mydebug("Log: Pushing %d on s:%d(i:%d) p:%d\n", num, stack->id, \
-		free_idx, partition->id);
-	stack->nums[free_idx] = num;
-	ft_memmove(&stack->idx[1], &stack->idx[0], (stack->max_size - 1)
+		free_nums_idx, partition->id);
+	stack->nums[free_nums_idx] = num;
+	ft_memmove(&stack->idx[1], &stack->idx[0], (stack->max_size - 1) \
 		* sizeof(int));
-	stack->idx[0] = free_idx;
 	ft_memmove(&stack->part_idx[1], &stack->part_idx[0], (stack->max_size - 1)
 		* sizeof(int));
+	stack->idx[0] = free_nums_idx;
 	stack->part_idx[0] = partition->id;
 	stack->size++;
 	if (false == increment_partition(stack, partition->id))
@@ -55,7 +53,7 @@ long	pop_stack(t_stack_ptr stack)
 	if (true == DEBUGGING)
 		mydebug("Log: Popping %d on s:%d(i:%d) p:%d\n", top_value, \
 		stack->id, 0, top_partition->id);
-	stack->nums[stack->idx[0]] = LONG_MAX;
+	stack->nums[stack->idx[0]] = INIT_NUM_VALUE;
 	ft_memmove(&stack->idx[0], &stack->idx[1], (stack->size - 1) * sizeof(int));
 	ft_memmove(&stack->part_idx[0], &stack->part_idx[1], (stack->size - 1) \
 		* sizeof(int));

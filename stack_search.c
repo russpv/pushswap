@@ -66,30 +66,30 @@ static void	_right_sorted_tests(t_stack_ptr s, int *low, int mid, int *high)
  * case 2: returns 0 for a new max num on a strictly asc stack
  */
 // Debug statements to add:
-/* left is sorted (right may also be)*/
-/* go to other portion
-mydebug("---- (binary search) -- ls, r: l = m \
-   + 1; num:%ld l[%d] m[%d] h[%d]\n",\
-		num, low, mid, high); */
-/* within left portion
-mydebug("---- (binary search) -- ls, l: h = m; num:%ld l[%d],
-	m[%d] h[%d]\n",\
-		num, low, mid, high); */
-/* right is sorted */
-/* go to other portion
-mydebug("---- (binary search) -- rs,
-	l: h = m; num:%ld l[%d] m[%d] h[%d]\n",\
-		num, low, mid, high); */
-/* within right portion
-mydebug("---- (binary search) -- rs, r: l = m \
-	+ 1; num:%ld l[%d] m[%d] h[%d]\n",\
-		num, low, mid, high); */
-/* mydebug("---- (binary search) -- returning %d; l_%d m_%d h_%d\n", high,
-	low, mid, high);*/
+// left is sorted (right may also be)
+// go to other portion
+//mydebug("---- (binary search) -- ls, r: l = m 
+//   + 1; num:%ld l[%d] m[%d] h[%d]\n",
+//		num, low, mid, high);
+// within left portion
+//mydebug("---- (binary search) -- ls, l: h = m; num:%ld l[%d],
+//	m[%d] h[%d]\n",
+//		num, low, mid, high);
+// right is sorted
+// go to other portion
+//mydebug("---- (binary search) -- rs,
+//	l: h = m; num:%ld l[%d] m[%d] h[%d]\n",
+//		num, low, mid, high); 
+// within right portion
+//mydebug("---- (binary search) -- rs, r: l = m 
+//	+ 1; num:%ld l[%d] m[%d] h[%d]\n",
+//		num, low, mid, high);
+// mydebug("---- (binary search) -- returning %d; l_%d m_%d h_%d\n", high,
+//	low, mid, high);
 // Return statement:
-/*mydebug("---- (binary search) -- %d goes at i:%d \
-			betw i-1:%ld and i:%ld\n", num, mid, get_stack_num(s, \
-			get_stack_idx_at_depth(s, mid - 1)), get_stack_num(s, mid));*/
+//mydebug("---- (binary search) -- %d goes at i:%d 
+//			betw i-1:%ld and i:%ld\n", num, mid, get_stack_num(s, 
+//			get_stack_idx_at_depth(s, mid - 1)), get_stack_num(s, mid));
 int	get_insert_position(t_stack_ptr s, long num)
 {
 	int	high;

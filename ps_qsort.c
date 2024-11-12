@@ -49,10 +49,10 @@ static bool	_do_smaller(t_state *s, t_partition_ptr partition,
  * Stack B is sorted high to low.
  */
 // Debug statements to add within while loop:
-/*		mylog("## Solve: %zu loop started (%zu moves remaining p:%d, \
-			%zu p's)\n", i, get_partition_size(partition), \
-			get_partition_id(partition), get_partition_count(s->curr_stack));*/
-/*		mylog("## Solve: end of round.\n\n"); */
+//	mylog("## Solve: %zu loop started (%zu moves remaining p:%d,
+//		%zu p's)\n", i, get_partition_size(partition),
+//		get_partition_id(partition), get_partition_count(s->curr_stack));
+/*	mylog("## Solve: end of round.\n\n"); */
 void	quicksort_partition(t_state *s, t_partition_ptr top_partn,
 		t_partition_ptr partn, size_t limit)
 {

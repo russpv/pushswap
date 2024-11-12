@@ -11,7 +11,7 @@ SOURCES = ps_main.c ps_solver.c ps_utils.c ps_argparse.c ps_argtests.c \
 		  partition_.c partition_getters.c partition_getters_2.c partition_setters.c \
 		  greedysort_.c greedysort_abs.c greedysort_findalts.c greedysort_getmoves.c \
 		  	greedysort_search.c ht.c       
-BONUS_SOURCES = ./tester/checker.c
+BONUS_SOURCES = ./tester/checker_.c ./tester/checker_gnl.c
 
 BONUS_OBJECTS = $(BONUS_SOURCES:.c=.o) $(filter-out ps_main.o, $(SOURCES:.c=.o))
 OBJECTS = $(SOURCES:.c=.o)
@@ -25,8 +25,8 @@ BOLD = \033[1m
 # Compiler and flags
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Wmissing-prototypes -Wstrict-prototypes \
--Wold-style-definition -pedantic -g
-LDFLAGS = -L$(LIB_DIR) -lft
+-Wold-style-definition -g
+LDFLAGS = -L$(LIB_DIR) -lft -fPIC
 LDFLAGS_SO = -L$(LIB_DIR) -lft -Wl,-rpath,$(LIB_DIR)
 
 LIB_CPDIR = .
@@ -51,7 +51,7 @@ bonus: $(NAME2)
 
 $(NAME2): $(LIB_PATH) $(BONUS_OBJECTS)
 	@echo "Creating $(NAME2) $(OUTPUT)..."
-	$(CC) $^ -DCHECKER_MODE -o $@ $(CFLAGS) 
+	$(CC) $^ -o $@ $(CFLAGS) $(LDFLAGS)
 	chmod +x $@
 	-@touch .bonus_made
 	@echo "$(GREEN)$(BOLD)SUCCESS$(RESET)"
@@ -59,9 +59,9 @@ $(NAME2): $(LIB_PATH) $(BONUS_OBJECTS)
 	@echo "$(YELLOW)Created: $(NAME2)$(RESET)"
 
 # Pattern rule to compile .c files into .o files with appropriate flags
-# For the checker, include the CHECKER_MODE flag
+# For the checker, include the -DCHECKER_MODE flag
 %.o: %.c
-	$(CC) -c -DCHECKER_MODE $(CFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@
 
 # make shared object lib
 $(LIB_PATH):

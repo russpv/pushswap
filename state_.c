@@ -1,5 +1,6 @@
 #include "pushswap.h"
 
+/* Note: does not fill stacks */
 void	create_state(t_state **state, char **args, int argcm)
 {
 	*state = malloc(sizeof(t_state));

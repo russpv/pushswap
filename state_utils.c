@@ -48,8 +48,7 @@ void	mylog(const char *format, ...)
 		va_end(args);
 		ft_printf("%s", RESET);
 		fflush(stderr);
-		if (-1 == dup2(original_stdout, STDOUT_FILENO))
-			;
+		dup2(original_stdout, STDOUT_FILENO);
 		close(original_stdout);
 	}
 }

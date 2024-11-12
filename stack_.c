@@ -40,7 +40,7 @@ t_stack_ptr	create_stack(const char id, const size_t size)
 			return (free(st->nums), free(st->idx), free(st->part_idx), NULL);
 		_do_init_loop(st);
 	}
-	mydebug("---- (created stack) max_size:%zu id:%d\n", st->max_size, st->id)
+	mydebug("---- (created stack) max_size:%zu id:%d\n", st->max_size, st->id);
 	return (st);
 }
 
@@ -93,7 +93,7 @@ void	destroy_stack(t_stack_ptr stack)
 	free(stack);
 }
 
-/* Populates nums and idx only
+/* Populates nums and idx only on empty stack
  * Expects an argument array of C strings */
 bool	fill_stack(t_stack_ptr stack, char **args)
 {

@@ -5,7 +5,7 @@
 /* Takes an unsorted stack A of three nums and sorts it */
 static void	_three_solve(t_state *s)
 {
-	const t_stack_ptr st = s->stacks[STACK_A];
+	const t_stack_ptr	st = s->stacks[STACK_A];
 
 	if (3 != get_stack_size(st))
 		return ;
@@ -13,13 +13,21 @@ static void	_three_solve(t_state *s)
 		move(st, SWAP, 0, NULL, PRINT_ON);
 	if (get_stack_num(st, 2) < get_stack_num(st, 0))
 		move(st, REV_ROTATE, 0, NULL, PRINT_ON);
-	else 
+	else
 	{
+		if (is_sorted_asc(st))
+		{
+			(mylog("three_solve: Stack A is sorted!! \n"));
+			return ;
+		}
 		move(st, REV_ROTATE, 0, NULL, PRINT_ON);
 		move(st, SWAP, 0, NULL, PRINT_ON);
 	}
-	if (is_sorted_asc(s->stacks[STACK_A]))
-		return (mylog("three_solve: Stack A is sorted!! \n"));
+	if (is_sorted_asc(st))
+	{
+		mylog("three_solve: Stack A is sorted!! \n");
+		return ;
+	}
 	else
 		err("ERR Three solve\n", s);
 }
@@ -27,8 +35,8 @@ static void	_three_solve(t_state *s)
 /* Takes an unsorted stack A of five nums and sorts it */
 static void	_five_solve(t_state *s)
 {
-	const t_stack_ptr st = s->stacks[STACK_A];
-	const t_partition_ptr p_b = create_partition(s->stacks[STACK_B]);
+	const t_stack_ptr		st = s->stacks[STACK_A];
+	const t_partition_ptr	p_b = create_partition(s->stacks[STACK_B]);
 
 	if (5 != get_stack_size(st))
 		return ;
@@ -43,7 +51,10 @@ static void	_five_solve(t_state *s)
 	if (false == greedy_sort(s))
 		err("ERR greedy sort failed\n", s);
 	if (is_sorted_asc(s->stacks[STACK_A]) && is_full(s->stacks[STACK_A]))
-		return (mylog("five_solve: Stack A is sorted!! Returning...\n"));
+	{
+		mylog("five_solve: Stack A is sorted!! Returning...\n");
+		return ;
+	}
 }
 
 // Debug statements to add:

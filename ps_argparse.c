@@ -17,7 +17,7 @@ static inline bool	_intersects(char const *s1, char const *set)
 	return (false);
 }
 
-/* Moves words onto array 
+/* Moves words onto array
  * Array may be un-initialized
  */
 static int	_realloc_word(char *old, char **new)
@@ -32,10 +32,10 @@ static int	_realloc_word(char *old, char **new)
 	return (SUCCESS);
 }
 
-/* Returns enlarged array after splitting at i 
+/* Returns enlarged array after splitting at i
  * updates argc accordingly
  */
-static char	**_realloc_argv(int *argc, char **argv, size_t i)
+static char	**_realloc_argv(char **argv, size_t i)
 {
 	char	**arr;
 	int		len;
@@ -50,7 +50,6 @@ static char	**_realloc_argv(int *argc, char **argv, size_t i)
 	{
 		ft_memset(args, 0, len + 1);
 		i = -1;
-		*argc = len;
 		while (++i < (size_t)len)
 			if (FAILURE == _realloc_word(arr[i], &(args[i])))
 				return (ft_freearr(args), ft_freearr(arr), NULL);
@@ -59,44 +58,23 @@ static char	**_realloc_argv(int *argc, char **argv, size_t i)
 	return (args);
 }
 
-/* Interface for hashtable */
-static int	_check_dupes(char **args, size_t size)
+static int	_process_arg(char **argv, char ***args, size_t i, int *flag)
 {
-	size_t i;
-
-	i = -1;
-	if (NULL == args || 0 == size)
-		return (FAILURE);
-	while (++i < size)
+	if (false == _intersects(argv[i], WHITESPACE))
 	{
-		if (NULL == lookup(args[i]))
-			install(args[i], NULL);
-		else
-		{
-			destroy_hasht();
-			return (FAILURE);
-		}
+		if (0 == *flag)
+			if (FAILURE == _realloc_word(argv[i], &(*args)[i - 1]))
+				return (FAILURE);
 	}
-	destroy_hasht();
-	return (SUCCESS);
-}
-
-/* Tests if word is an integer no space */
-int	check_word(char *word)
-{
-	size_t	i;
-	long	num;
-
-	i = -1;
-	while (word[++i])
+	else if (0 == *flag && i == 1)
 	{
-		if (i == 0 && word[i] == '-')
-			continue ;
-		else if (!ft_isdigit(word[i]))
+		free(*args);
+		*args = _realloc_argv(argv, i);
+		*flag = 1;
+		if (!*args)
 			return (FAILURE);
 	}
-	num = ft_atol(word);
-	if (num > INT_MAX || num < INT_MIN)
+	else
 		return (FAILURE);
 	return (SUCCESS);
 }
@@ -109,34 +87,19 @@ int	check_word(char *word)
  */
 int	parse_args(int *argc, char **argv, char ***args)
 {
-	size_t	i;
-	size_t	tmp;
-	int		flag;
+	size_t			i;
+	const size_t	tmp = (size_t)(*argc);
+	int				flag;
 
-	tmp = (size_t)(*argc);
-	*args = malloc(sizeof(char*) * (tmp));
+	*args = malloc(sizeof(char *) * (tmp));
 	if (!*args)
 		return (FAILURE);
-	ft_memset(*args, 0, sizeof(char*) * (tmp));
+	ft_memset(*args, 0, sizeof(char *) * (tmp));
 	i = 0;
 	flag = 0;
-	while (++i < tmp)
+	while (++i < tmp && flag == 0)
 	{
-		if (false == _intersects(argv[i], WHITESPACE))
-		{
-			if (0 == flag)
-				if (FAILURE == _realloc_word(argv[i], &(*args)[i - 1]))
-					return (FAILURE);
-		}
-		else if (0 == flag && i == 1)
-		{
-			free(*args);
-			*args = _realloc_argv(argc, argv, i);
-			flag = 1;
-			if (!*args)
-				return (FAILURE);
-		}
-		else
+		if (FAILURE == _process_arg(argv, args, i, &flag))
 			return (FAILURE);
 		if (FAILURE == check_word((*args)[i - 1]))
 			return (FAILURE);
@@ -146,5 +109,7 @@ int	parse_args(int *argc, char **argv, char ***args)
 		(*args)[i - 1] = NULL;
 		*argc = tmp - 1;
 	}
-	return (_check_dupes(*args, *argc));
+	else
+		*argc = ft_arrlen(*(const char ***)args);
+	return (check_dupes(*args, *argc));
 }

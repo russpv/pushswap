@@ -1,7 +1,7 @@
-#include "ht.h"
+#include "hashtable.h"
 
 /* This defines an array of linked lists
- * for indexing 
+ * for indexing
  * Stores multiple entries at an index
  * so no data is lost
  */
@@ -10,7 +10,7 @@ static struct s_entry	*g_hasht[HASHSIZE];
 
 static unsigned int	hash(char *s)
 {
-	unsigned int hashval;
+	unsigned int	hashval;
 
 	hashval = 0;
 	while (*s)
@@ -21,7 +21,7 @@ static unsigned int	hash(char *s)
 /* Returns node of unique name */
 struct s_entry	*lookup(char *s)
 {
-	struct s_entry *np;
+	struct s_entry	*np;
 
 	np = g_hasht[hash(s)];
 	while (NULL != np)
@@ -36,7 +36,7 @@ struct s_entry	*lookup(char *s)
 /* Makes new entry the head for the hash bucket */
 struct s_entry	*install(char *name, char *data)
 {
-	struct s_entry *np;
+	struct s_entry	*np;
 	unsigned int	hashval;
 
 	np = lookup(name);
@@ -63,9 +63,9 @@ struct s_entry	*install(char *name, char *data)
 
 int	destroy_hasht(void)
 {
-	struct s_entry *np;
-	struct s_entry *tmp;
-	size_t	i;
+	struct s_entry	*np;
+	struct s_entry	*tmp;
+	size_t			i;
 
 	i = -1;
 	while (++i < HASHSIZE)
@@ -81,5 +81,5 @@ int	destroy_hasht(void)
 			np = tmp;
 		}
 	}
-	return (0);	
+	return (0);
 }

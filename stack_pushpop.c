@@ -13,15 +13,18 @@ static int	_get_next_free_idx(t_stack_ptr stack)
 	return (i);
 }
 
-/* Adds num to top of stack assuming stack not full and
- * partition has been created
+/* Adds num to top of stack assuming stack not full
+ * And there are still free partition indices if 
+ * valid partition_ptr is not passed
  */
 bool	push_stack(t_stack_ptr stack, int num, t_partition_ptr partition)
 {
 	const int	free_idx = _get_next_free_idx(stack);
 
-	if (NULL == partition || -1 == free_idx)
+	if (-1 == free_idx)
 		return (false);
+	if (NULL == partition)
+		partition = create_partition(stack);
 	if (true == DEBUGGING)
 		mydebug("Log: Pushing %d on s:%d(i:%d) p:%d\n", num, stack->id, \
 		free_idx, partition->id);

@@ -1,9 +1,9 @@
 #ifndef PUSHSWAP_H
 # define PUSHSWAP_H
 
+# include "hashtable.h"
 # include "libft/libft.h"
 # include "stack.h"
-# include "ht.h"
 # include <fcntl.h>
 # include <limits.h>
 # include <stdarg.h>
@@ -19,8 +19,15 @@
 # define RESET "\033[0m"
 # define PRINT_ON 1
 # define PRINT_OFF 0
-# define LOGGING true
 # define TOP_IDX 0
+
+# ifdef CHECKER_MODE
+#  define DEBUGGING false
+#  define LOGGING false
+# else
+#  define DEBUGGING false
+#  define LOGGING false
+# endif
 
 enum			e_stacks
 {
@@ -67,7 +74,7 @@ typedef struct s_state
 }				t_state;
 
 // main.c
-int				parse_args(int *a, char **b, char***c);
+int				parse_args(int *a, char **b, char ***c);
 
 // state.c
 void			create_state(t_state **a, char **b, int c);
@@ -80,9 +87,9 @@ bool			is_done(t_state *a);
 
 void			move(t_stack_ptr a, enum e_move_type b, ...);
 
-void			swap_both(t_state *a);
-void			rotate_both(t_state *a);
-void			rev_rotate_both(t_state *a);
+void			swap_both(t_state *a, int b);
+void			rotate_both(t_state *a, int b);
+void			rev_rotate_both(t_state *a, int b);
 
 void			print_stacks(t_state *a);
 void			print_stack_name(t_stack_ptr a);
@@ -110,7 +117,11 @@ void			quicksort_partition(t_state *a, t_partition_ptr b,
 
 // utils.c
 void			err(char *a, t_state *b);
-void			printarr(char**a);
+void			printarr(char **a);
 void			mylog(const char *a, ...);
+
+// argparse.c argtests.c
+int				check_dupes(char **a, size_t b);
+int				check_word(char *a);
 
 #endif

@@ -19,13 +19,13 @@ static bool	_do_rotates(t_state *s, int dest_moves, int src_moves)
 {
 	while (dest_moves < 0 && src_moves < 0)
 	{
-		rev_rotate_both(s);
+		rev_rotate_both(s, PRINT_ON);
 		dest_moves++;
 		src_moves++;
 	}
 	while (dest_moves > 0 && src_moves > 0)
 	{
-		rotate_both(s);
+		rotate_both(s, PRINT_ON);
 		dest_moves--;
 		src_moves--;
 	}
@@ -69,6 +69,7 @@ static bool	_do_cheapest_num(t_state *s)
 	if (false == _do_rotates(s, dest_moves, src_moves))
 		return (false);
 	move(s->dest_stack, PUSH, pop_stack(s->curr_stack), partition, PRINT_ON);
+	print_stacks(s);
 	mylog("(do_cheapest_num) -- Finished. \n");
 	return (true);
 }
@@ -94,6 +95,7 @@ bool	greedy_sort(t_state *s)
 {
 	size_t	i;
 
+	print_stacks(s);
 	i = get_stack_size(s->curr_stack);
 	mylog("\033[45mGREEDY SORT *********************\n\033[0m");
 	mylog("\033[45mGREEDY SORT *********************\n\033[0m");

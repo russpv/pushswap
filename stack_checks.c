@@ -15,6 +15,7 @@ bool	stack_compare(int a, t_stack_ptr b)
 	return (false);
 }
 
+/* Returns true for empty stack */
 bool	is_sorted_asc(t_stack_ptr s)
 {
 	size_t		i;
@@ -22,6 +23,8 @@ bool	is_sorted_asc(t_stack_ptr s)
 	const long	*nums = s->nums;
 
 	i = 1;
+	if (!s)
+		return (false);
 	if (s->size < (size_t)2)
 		return (true);
 	while (i < s->size)
@@ -35,7 +38,9 @@ bool	is_sorted_asc(t_stack_ptr s)
 	return (true);
 }
 
-/* Written assuming a single disjoint 'drop' in the sequence */
+/* Written assuming a single disjoint 'drop' in the sequence 
+ * Returns true for empty stack
+ */
 bool	is_sorted_asc_rotationally(t_stack_ptr s)
 {
 	int	drops;

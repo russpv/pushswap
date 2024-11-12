@@ -3,7 +3,8 @@ NAME2 = checker
 
 OUTPUT = executable
 
-SOURCES = ps_main.c ps_solver.c ps_utils.c ps_argparse.c ps_qsort.c \
+SOURCES = ps_main.c ps_solver.c ps_utils.c ps_argparse.c ps_argtests.c \
+		  ps_qsort.c \
 		  state_.c state_checks.c state_moves.c state_moves_2.c state_utils.c \
 		  stack_.c stack_checks.c stack_getters.c stack_getters_2.c stack_moves.c \
 		  	stack_peeks.c stack_pushpop.c stack_search.c stack_utils.c stack_setters.c \
@@ -23,7 +24,8 @@ BOLD = \033[1m
 
 # Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -Wmissing-prototypes -Wstrict-prototypes \
+-Wold-style-definition -pedantic -g
 LDFLAGS = -L$(LIB_DIR) -lft
 LDFLAGS_SO = -L$(LIB_DIR) -lft -Wl,-rpath,$(LIB_DIR)
 
@@ -49,15 +51,17 @@ bonus: $(NAME2)
 
 $(NAME2): $(LIB_PATH) $(BONUS_OBJECTS)
 	@echo "Creating $(NAME2) $(OUTPUT)..."
-	$(CC) $^ -o $@ $(CFLAGS)
+	$(CC) $^ -DCHECKER_MODE -o $@ $(CFLAGS) 
 	chmod +x $@
 	-@touch .bonus_made
 	@echo "$(GREEN)$(BOLD)SUCCESS$(RESET)"
 	@echo "$(YELLOW)Created: $(words $(BONUS_OBJECTS)) object file(s)$(RESET)"
 	@echo "$(YELLOW)Created: $(NAME2)$(RESET)"
 
+# Pattern rule to compile .c files into .o files with appropriate flags
+# For the checker, include the CHECKER_MODE flag
 %.o: %.c
-	$(CC) -c $(CFLAGS) $< -o $@ #Initial compilation of .c files
+	$(CC) -c -DCHECKER_MODE $(CFLAGS) $< -o $@
 
 # make shared object lib
 $(LIB_PATH):

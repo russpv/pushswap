@@ -1,45 +1,47 @@
 #include "stack_int.h"
 
-static void	_do_loop(size_t i, t_stack_ptr stack)
+static inline void	_do_init_loop(t_stack_ptr stack)
 {
-	if (i < MAX_PARTITIONS)
-		stack->partitions[i] = NULL;
-	stack->nums[i] = INIT_NUM_VALUE;
-	stack->idx[i] = INIT_IDX_VALUE;
-	stack->part_idx[i] = INIT_IDX_VALUE;
+	size_t	i;
+
+	i = -1;
+	while (++i < stack->max_size)
+	{
+		if (i < MAX_PARTITIONS)
+			stack->partitions[i] = NULL;
+		stack->nums[i] = INIT_NUM_VALUE;
+		stack->idx[i] = INIT_IDX_VALUE;
+		stack->part_idx[i] = INIT_IDX_VALUE;
+	}
 	return ;
 }
 
 t_stack_ptr	create_stack(const char id, const size_t size)
 {
-	size_t		i;
-	t_stack_ptr	stack;
+	t_stack_ptr	st;
 
 	if (!(size > 0))
 		return (mydebug("ERR stack size 0\n"), NULL);
-	stack = malloc(sizeof(struct s_stack));
-	if (stack)
+	st = malloc(sizeof(struct s_stack));
+	if (st)
 	{
-		stack->id = id;
-		stack->max_size = size;
-		stack->size = 0;
-		stack->partition_count = 0;
-		stack->nums = malloc(sizeof(long) * size);
-		stack->idx = malloc(sizeof(int) * size);
-		stack->part_idx = malloc(sizeof(int) * size);
-		stack->tmp = 0;
-		stack->min = 0;
-		stack->max = 0;
-		stack->last_update_size = 0;
-		if (!stack->nums || !stack->idx || !stack->part_idx)
-			return (free(stack->nums), free(stack->idx), free(stack->part_idx),
-				NULL);
-		i = -1;
-		while (++i < size)
-			_do_loop(i, stack);
+		st->id = id;
+		st->max_size = size;
+		st->size = 0;
+		st->partition_count = 0;
+		st->nums = malloc(sizeof(long) * size);
+		st->idx = malloc(sizeof(int) * size);
+		st->part_idx = malloc(sizeof(int) * size);
+		st->tmp = 0;
+		st->min = 0;
+		st->max = 0;
+		st->last_update_size = 0;
+		if (!st->nums || !st->idx || !st->part_idx)
+			return (free(st->nums), free(st->idx), free(st->part_idx), NULL);
+		_do_init_loop(st);
 	}
-	mydebug("---- (created stack) max_size:%zu id:%d\n", stack->max_size, stack->id);
-	return (stack);
+	mydebug("---- (created stack) max_size:%zu id:%d\n", st->max_size, st->id)
+	return (st);
 }
 
 t_stack_ptr	copy_stack(t_stack_ptr src)
@@ -66,7 +68,7 @@ t_stack_ptr	copy_stack(t_stack_ptr src)
 	i = SIZE_MAX;
 	while (++i < get_partition_count(src))
 		copy_partition(src->partitions[i], s);
-	mydebug("---- (copy_stack) -- (size_%zu, max_%zu, parts_%zu): ", \
+	mydebug("---- (copy_stack) -- (size_%zu, max_%zu, parts_%zu): ",
 		get_stack_size(s), get_stack_max_size(s), get_partition_count(s));
 	return (s);
 }
@@ -80,7 +82,7 @@ void	destroy_stack(t_stack_ptr stack)
 	{
 		if (stack->partitions[i] != NULL)
 		{
-			mydebug("---- (destroy_part): part_%d destroyed..\n", \
+			mydebug("---- (destroy_part): part_%d destroyed..\n",
 				stack->partitions[i]->id);
 			destroy_partition(&stack->partitions[i]);
 		}
@@ -91,21 +93,18 @@ void	destroy_stack(t_stack_ptr stack)
 	free(stack);
 }
 
-/* Populates nums and idx only 
+/* Populates nums and idx only
  * Expects an argument array of C strings */
 bool	fill_stack(t_stack_ptr stack, char **args)
 {
 	size_t	i;
 
 	i = 0;
-	stackprintarr(args);
-
 	if (NULL == stack)
 		return (false);
 	while (args[i] != NULL)
 	{
 		stack->nums[i] = (long)ft_atoi(args[i]);
-		mydebug("added:%ld", (long)ft_atoi(args[i]));
 		stack->idx[i] = i;
 		stack->size++;
 		i++;

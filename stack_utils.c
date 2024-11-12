@@ -11,6 +11,13 @@ void	stackprintarr(char **arr)
 	mydebug("|\n");
 }
 
+/* Note: to compile on __APPLE__ use: 
+* #if defined(__APPLE__)
+*		ft_vprintf(format, &args);
+* #else
+*		ft_vprintf(format, (va_list *)args);
+* #endif
+*/
 void	mydebug(const char *format, ...)
 {
 	int		original_stdout;
@@ -28,13 +35,10 @@ void	mydebug(const char *format, ...)
 		}
 		ft_printf("%s", GREY);
 		va_start(args, format);
-		#if defined(__APPLE__)
-		ft_vprintf(format, &args);
-		#else
-		ft_vprintf(format, (va_list*)args);
-		#endif
+		ft_vprintf(format, (va_list *)args);
 		va_end(args);
 		ft_printf("%s", RESET);
+		fflush(stderr);
 		dup2(original_stdout, STDOUT_FILENO);
 		close(original_stdout);
 	}

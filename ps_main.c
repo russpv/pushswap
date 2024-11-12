@@ -20,7 +20,7 @@
 int	main(int argc, char **argv)
 {
 	t_state	*state;
-	char **args;
+	char	**args;
 
 	args = NULL;
 	state = NULL;

@@ -2,6 +2,23 @@
 
 #define PASSES 2
 
+static void	_two_solve(t_state *s)
+{
+	const t_stack_ptr	st = s->stacks[STACK_A];
+
+	if (2 != get_stack_size(st))
+		return ;
+	if (get_stack_num(st, 0) > get_stack_num(st, 1))
+		move(st, SWAP, 0, NULL, PRINT_ON);
+	if (is_sorted_asc(st))
+	{
+		(mylog("two_solve: Stack A is sorted!! \n"));
+		return ;
+	}
+	else
+		err("ERR Two solve\n", s);
+}
+
 /* Takes an unsorted stack A of three nums and sorts it */
 static void	_three_solve(t_state *s)
 {
@@ -100,7 +117,9 @@ void	solver(t_state *s)
 	s->passes = PASSES;
 	if (is_done(s))
 		return ;
-	if (3 == s->nums)
+	if (2 == s->nums)
+		_two_solve(s);
+	else if (3 == s->nums)
 		_three_solve(s);
 	else if (5 == s->nums)
 		_five_solve(s);

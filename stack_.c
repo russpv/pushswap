@@ -5,10 +5,11 @@ static inline void	_do_init_loop(t_stack_ptr stack)
 	size_t	i;
 
 	i = -1;
+	while (++i < MAX_PARTITIONS)
+		stack->partitions[i] = NULL;
+	i = -1;
 	while (++i < stack->max_size)
 	{
-		if (i < MAX_PARTITIONS)
-			stack->partitions[i] = NULL;
 		stack->nums[i] = INIT_NUM_VALUE;
 		stack->idx[i] = INIT_IDX_VALUE;
 		stack->part_idx[i] = INIT_IDX_VALUE;

@@ -41,3 +41,20 @@ int	check_word(char *word)
 		return (FAILURE);
 	return (SUCCESS);
 }
+
+int	has_digits(char *word)
+{
+	size_t	i;
+	int		flag;
+
+	i = -1;
+	flag = 0;
+	while (word[++i])
+	{
+		if (ft_isdigit(word[i]))
+			flag = 1;
+	}
+	if (1 == flag)
+		return (SUCCESS);
+	return (FAILURE);
+}

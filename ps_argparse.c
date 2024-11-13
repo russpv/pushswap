@@ -68,7 +68,7 @@ static int	_process_arg(char **argv, char ***args, size_t i, int *flag)
 			if (FAILURE == _realloc_word(argv[i], &(*args)[i - 1]))
 				return (FAILURE);
 	}
-	else if (0 == *flag && i == 1)
+	else if (0 == *flag && i == 1 && SUCCESS == has_digits(argv[i]))
 	{
 		free(*args);
 		*args = _realloc_argv(argv, i);

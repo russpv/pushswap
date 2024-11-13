@@ -123,5 +123,6 @@ void			mylog(const char *a, ...);
 // argparse.c argtests.c
 int				check_dupes(char **a, size_t b);
 int				check_word(char *a);
+int				has_digits(char *a);
 
 #endif

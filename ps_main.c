@@ -29,6 +29,7 @@ int	main(int argc, char **argv)
 	if (parse_args(&argc, argv, &args) == FAILURE)
 	{
 		ft_printf("Error");
+		ft_freearr(args);
 		return (EXIT_FAILURE);
 	}
 	create_state(&state, args, argc);
